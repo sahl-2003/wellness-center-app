@@ -1,0 +1,51 @@
+.mb-3{
+    margin-bottom: 1rem;
+}
+.mb-4{
+    margin-bottom: 1.5rem;
+}
+.mb-5{
+    margin-bottom: 2rem;
+}
+.mb-6{
+    margin-bottom: 2.5rem;
+}
+
+.text-center{
+    text-align: center;
+}
+.text-left{
+    text-align: left;
+}
+.text-right{
+    text-align: right;
+}
+.text-justify{  
+    text-align: justify;
+}
+.text-nowrap{
+    white-space: nowrap;
+}
+.text-lowercase{
+    text-transform: lowercase;
+}
+.text-uppercase{
+    text-transform: uppercase;
+}
+.text-capitalize{
+    text-transform: capitalize;
+}
+.text-bold{
+    font-weight: bold;
+}
+
+.text-primary {
+    color: #4a8f29 !important;
+}
+.text-center {
+    text-align: center;
+}
+
+.text-primary:hover {
+    color: #dce3d8 !important;
+}

@@ -1,0 +1,436 @@
+﻿/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+.about-hero {
+    position: relative;
+    background: url('image/n2.png')no-repeat center center;
+    background-size: cover;
+    background-position: center;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+    
+    .about-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out 0.5s forwards;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+
+
+    .about-hero p {
+        font-size: 1.3rem;
+        max-width: 800px;
+        margin: 0 auto;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out 0.7s forwards;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+.about-mission {
+    padding: 80px 0;
+    background-color: #f8f9fa;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.about-image {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+    .about-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.5s;
+    }
+
+    .about-image:hover img {
+        transform: scale(1.03);
+    }
+
+.about-text h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    position: relative;
+    padding-bottom: 15px;
+}
+
+    .about-text h2::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 80px;
+        height: 4px;
+        background-color: var(--primary-color);
+    }
+
+.about-text p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+.about-values {
+    margin-top: 50px;
+}
+
+.value-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.value-card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+    .value-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+.value-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.value-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.section-subtitle {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.1rem;
+    color: #7f8c8d;
+}
+/* Wellness Practices */
+.wellness-practices {
+    background-color: #f9f9f7;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.practices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.practice-card {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+    .practice-card:hover {
+        transform: translateY(-5px);
+    }
+
+.practice-icon {
+    font-size: 2.5rem;
+    color: #4a8f29;
+    margin-bottom: 1rem;
+}
+
+.practice-card h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.practice-benefits {
+    list-style: none;
+    padding: 0;
+    margin-top: 1.5rem;
+}
+
+    .practice-benefits li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .practice-benefits i {
+        color: #4a8f29;
+        margin-right: 0.5rem;
+    }
+
+/* Wellness Philosophy */
+.wellness-philosophy {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.philosophy-points {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.point {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+    .point i {
+        color: #4a8f29;
+        font-size: 1.2rem;
+    }
+/* Team Slider Styles */
+
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Team Slider Styles */
+.team-slider-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 500px;
+    overflow: hidden;
+    perspective: 1000px;
+    padding-bottom: 30px;
+}
+
+.team-slider-track {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-slide {
+    position: absolute;
+    width: 350px;
+    max-width: 350px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, filter, opacity; /* Improves performance */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.team-photo {
+    width: 250px; /* Fixed width */
+    height: 250px; /* Fixed height */
+    border-radius: 50%; /* Circular photos */
+    object-fit: cover; /* Ensures image fills space while maintaining aspect ratio */
+    object-position: center; /* Centers the image */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: 3px solid white; /* Optional: adds a nice border */
+}
+
+.team-info {
+    text-align: center;
+}
+
+    .team-info h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 1.5rem;
+    }
+
+    .team-info p {
+        margin: 5px 0;
+        color: #666;
+    }
+
+
+.slider-progress {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 0.9rem;
+    z-index: 10;
+}
+
+
+
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.8);
+    color: #333;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+    .slider-arrow:hover {
+        background: #fff;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+
+.prev-arrow {
+    left: 0;
+}
+
+.next-arrow {
+    right: 0;
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 20;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+    .dot.active {
+        background-color: #1c9b0e;
+        transform: scale(1.2);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .dot:hover {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+    .about-image {
+        order: -1;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .about-text {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .about-hero p {
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    /* You can adjust padding if needed */
+}

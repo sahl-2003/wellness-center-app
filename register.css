@@ -1,0 +1,159 @@
+﻿body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: url('image/r1.jpg') no-repeat center center/cover;
+
+}
+
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 20px;
+    min-height: 100vh;
+    position: relative;
+    background: url('image/register-bg.jpg') no-repeat center center/cover;
+    padding-top: 40px;
+}
+
+/* === Wrapper that holds both containers side-by-side === */
+.form-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+}
+
+/* === Glass form now on the LEFT === */
+.auth-container {
+    position: relative;
+    width: 550px;
+    padding: 2rem;
+    margin-right: 550px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    color: #fff;
+}
+
+    .auth-container h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--primary-color);
+        font-size: 2rem;
+    }
+
+.auth-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+
+    .form-group input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 143, 41, 0.2);
+        outline: none;
+    }
+
+.auth-form button {
+    width: 100%;
+    padding: 1rem;
+    background: #4a8f29;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .auth-form button:hover {
+        background-color: #3a741f;
+    }
+
+.auth-options {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+    .auth-options a {
+        color: var(--primary-color);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .auth-options a:hover {
+            text-decoration: underline;
+        }
+
+
+/* === Info box now on the RIGHT === */
+.info-box {
+    position: absolute;
+   margin-left:550px;
+    width: 55%;
+    height: 85vh;
+    background: url('image/r2.jpg') no-repeat center center/cover;
+    background-size: cover;
+    border-radius: 20px;
+    z-index: 1;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .info-box .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+/* === Centered content with transparent black background === */
+.info-content {
+    position: relative;
+    background: rgba(0, 0, 0, 0.4); /* Transparent black background */
+    padding: 2rem 2.5rem;
+    border-radius: 15px;
+    z-index: 2;
+    color: #fff;
+    max-width: 80%;
+    text-align: center;
+}
+
+    .info-content h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-content p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+/* If you have a hero or background image section, set its height smaller */
+.hero, .register-hero, .register-bg {
+    min-height: 120px;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+}
