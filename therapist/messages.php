@@ -219,12 +219,12 @@ $conn->close();
         <div class="therapist-sidebar-custom">
             <div class="text-center mb-4">
                 <div class="profile-image-container mb-3">
-                <?php if (!empty($therapist['profile_picture'])): ?>
+                    <?php if (!empty($therapist['profile_picture'])): ?>
                         <img src="../<?php echo htmlspecialchars($therapist['profile_picture']); ?>" class="profile-picture" alt="Profile Picture">
-                <?php else: ?>
+                    <?php else: ?>
                         <img src="../assets/images/default-profile.jpg" class="profile-picture" alt="Profile Picture">
                     <?php endif; ?>
-                    </div>
+                </div>
                 <h5><?php echo htmlspecialchars($therapist['username'] ?? $_SESSION['username']); ?></h5>
                 <small><?php echo htmlspecialchars($therapist['email'] ?? $_SESSION['email']); ?></small>
                 <?php if (!empty($therapist['specialization'])): ?>
@@ -271,7 +271,7 @@ $conn->close();
                                 </div>
                             </form>
                         </div>
-                </div>
+                    </div>
                     <div class="card-therapist">
                         <div class="card-header-therapist"><i class="fas fa-comments"></i> Messages</div>
                         <div class="card-body-therapist">
@@ -296,44 +296,44 @@ $conn->close();
                         </div>
                     </div>
                 </div>
-                        <!-- Message Area -->
+                <!-- Message Area -->
                 <div style="flex:2 1 480px;min-width:320px;max-width:900px;">
-                            <?php if ($current_conversation): ?>
+                    <?php if ($current_conversation): ?>
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
                             <h3 style="font-size:1.2rem;font-weight:600;margin:0;">Conversation with <?php echo htmlspecialchars($current_conversation['username']); ?></h3>
                             <a href="clients.php?client_id=<?php echo $current_conversation['user_id']; ?>" class="btn-therapist btn-sm-therapist btn-therapist-secondary">
-                                        <i class="fas fa-user me-1"></i> View Profile
-                                    </a>
-                                </div>
-                                <div class="message-container mb-3">
-                                    <?php if (empty($conversation_messages)): ?>
-                                        <div class="text-center text-muted py-4">No messages yet</div>
-                                    <?php else: ?>
-                                        <?php foreach ($conversation_messages as $message): ?>
-                                            <div class="message-bubble <?php echo $message['sender_id'] == $_SESSION['user_id'] ? 'message-sent' : 'message-received'; ?>">
-                                                <div><?php echo htmlspecialchars($message['content']); ?></div>
-                                                <div class="message-time">
-                                                    <?php echo date('M j, g:i a', strtotime($message['created_at'])); ?>
-                                                    <?php if ($message['sender_id'] == $_SESSION['user_id']): ?>
-                                                        <?php if ($message['is_read']): ?>
-                                                            <i class="fas fa-check-double text-primary" title="Read"></i>
-                                                        <?php else: ?>
-                                                            <i class="fas fa-check text-muted" title="Sent"></i>
-                                                        <?php endif; ?>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
+                                <i class="fas fa-user me-1"></i> View Profile
+                            </a>
+                        </div>
+                        <div class="message-container mb-3">
+                            <?php if (empty($conversation_messages)): ?>
+                                <div class="text-center text-muted py-4">No messages yet</div>
+                            <?php else: ?>
+                                <?php foreach ($conversation_messages as $message): ?>
+                                    <div class="message-bubble <?php echo $message['sender_id'] == $_SESSION['user_id'] ? 'message-sent' : 'message-received'; ?>">
+                                        <div><?php echo htmlspecialchars($message['content']); ?></div>
+                                        <div class="message-time">
+                                            <?php echo date('M j, g:i a', strtotime($message['created_at'])); ?>
+                                            <?php if ($message['sender_id'] == $_SESSION['user_id']): ?>
+                                                <?php if ($message['is_read']): ?>
+                                                    <i class="fas fa-check-double text-primary" title="Read"></i>
+                                                <?php else: ?>
+                                                    <i class="fas fa-check text-muted" title="Sent"></i>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
                         <form method="post" style="display:flex;gap:12px;align-items:flex-end;">
-                                    <input type="hidden" name="receiver_id" value="<?php echo $current_conversation['user_id']; ?>">
+                            <input type="hidden" name="receiver_id" value="<?php echo $current_conversation['user_id']; ?>">
                             <textarea name="message_content" class="form-control" rows="2" placeholder="Type your message..." style="flex:1;resize:vertical;min-height:38px;"></textarea>
                             <button type="submit" name="send_message" class="btn-therapist btn-therapist-primary" style="min-width:120px;">
                                 <i class="fas fa-paper-plane me-1"></i> Send
-                                        </button>
-                                </form>
-                            <?php else: ?>
+                            </button>
+                        </form>
+                    <?php else: ?>
                         <div class="card-therapist">
                             <div class="card-body-therapist text-center" style="color:#888;">Select a client to start a conversation.</div>
                         </div>
