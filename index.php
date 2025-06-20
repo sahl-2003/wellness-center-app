@@ -104,7 +104,7 @@
                 </div>
                 <!-- More service cards would go here -->
             </div>
-            <div class="text-center">
+            <div class="services-cta-container">
                 <a href="services.php" class="btn btn-primary">View All Services</a>
             </div>
         </div>
@@ -354,6 +354,137 @@
         // Initialize
         updateSlider();
     });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function () {
+                    const navLinks = document.querySelector('.nav-links');
+                    if (navLinks) {
+                        navLinks.classList.toggle('active');
+                    }
+                });
+            }
+
+            // Testimonial Slider
+            const slides = document.querySelectorAll('.testimonial-card');
+            const next = document.querySelector('.next-arrow');
+            const prev = document.querySelector('.prev-arrow');
+            const dotsContainer = document.querySelector('.testimonial-dots');
+            let currentIndex = 0;
+            let slideInterval;
+            let dots = [];
+
+            function setupDots() {
+                if (!dotsContainer) return;
+                dotsContainer.innerHTML = '';
+                dots = [];
+                slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('dot');
+                    dot.addEventListener('click', () => {
+                        showSlide(i);
+                        stopSlider();
+                        startSlider();
+                    });
+                    dotsContainer.appendChild(dot);
+                    dots.push(dot);
+                });
+            }
+
+            function updateDots(index) {
+                if (!dotsContainer) return;
+                dots.forEach((dot, i) => {
+                    if (i === index) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+
+            function showSlide(index) {
+                if (slides.length === 0) return;
+                slides.forEach((slide) => {
+                    slide.classList.remove('active');
+                });
+                slides[index].classList.add('active');
+                updateDots(index);
+                currentIndex = index;
+            }
+
+            function nextSlide() {
+                const newIndex = (currentIndex + 1) % slides.length;
+                showSlide(newIndex);
+            }
+
+            function prevSlide() {
+                const newIndex = (currentIndex - 1 + slides.length) % slides.length;
+                showSlide(newIndex);
+            }
+
+            function startSlider() {
+                stopSlider(); // Ensure no multiple intervals running
+                if (slides.length > 1) {
+                    slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+                }
+            }
+
+            function stopSlider() {
+                clearInterval(slideInterval);
+            }
+
+            if (slides.length > 0) {
+                setupDots();
+                showSlide(currentIndex);
+                startSlider();
+
+                if(next) {
+                    next.addEventListener('click', () => {
+                        nextSlide();
+                        stopSlider();
+                        startSlider(); // Restart autoplay after manual navigation
+                    });
+                }
+
+                if(prev) {
+                    prev.addEventListener('click', () => {
+                        prevSlide();
+                        stopSlider();
+                        startSlider(); // Restart autoplay after manual navigation
+                    });
+                }
+
+                const sliderContainer = document.querySelector('.testimonial-slider-container');
+                if(sliderContainer) {
+                    sliderContainer.addEventListener('mouseenter', stopSlider);
+                    sliderContainer.addEventListener('mouseleave', startSlider);
+                }
+            }
+
+            // Scroll Reveal Animation
+            const revealElements = document.querySelectorAll('.feature-card, .about-image, .about-content, .service-card, .testimonial-slider-container, .cta-card, .blog-card');
+            
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Use a class to trigger animation defined in CSS
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { 
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px" // Start animation a bit before it's fully in view
+            });
+
+            revealElements.forEach(el => {
+                el.classList.add('reveal'); // Add initial state class
+                revealObserver.observe(el);
+            });
+        });
     </script>
     <script src="auth_check.js"></script>
 </body>

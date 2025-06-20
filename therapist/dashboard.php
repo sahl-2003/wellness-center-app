@@ -126,7 +126,15 @@ $conn->close();
     <link rel="stylesheet" href="therapist_dashboard_custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Remove all previous embedded styles, as they are now in the CSS file */
+        .stats-card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        .stats-card-link .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -181,27 +189,33 @@ $conn->close();
             </div>
             <!-- Stats Grid -->
             <div class="dashboard-stats-grid">
-                <div class="card-therapist stats-card">
-                    <div class="card-body-therapist text-center">
-                        <i class="fas fa-users fa-2x mb-2"></i>
-                        <h3 style="margin: 10px 0 0 0;"><?php echo $client_count ?? 0; ?></h3>
-                        <div class="card-subtitle-therapist">Active Clients</div>
+                <a href="clients.php" class="stats-card-link">
+                    <div class="card-therapist stats-card">
+                        <div class="card-body-therapist text-center">
+                            <i class="fas fa-users fa-2x mb-2"></i>
+                            <h3 style="margin: 10px 0 0 0;"><?php echo $client_count ?? 0; ?></h3>
+                            <div class="card-subtitle-therapist">Active Clients</div>
+                        </div>
                     </div>
-                </div>
-                <div class="card-therapist stats-card">
-                    <div class="card-body-therapist text-center">
-                        <i class="fas fa-calendar-check fa-2x mb-2"></i>
-                        <h3 style="margin: 10px 0 0 0;"><?php echo $upcoming_count ?? 0; ?></h3>
-                        <div class="card-subtitle-therapist">Upcoming Appointments</div>
+                </a>
+                <a href="appointments.php" class="stats-card-link">
+                    <div class="card-therapist stats-card">
+                        <div class="card-body-therapist text-center">
+                            <i class="fas fa-calendar-check fa-2x mb-2"></i>
+                            <h3 style="margin: 10px 0 0 0;"><?php echo $upcoming_count ?? 0; ?></h3>
+                            <div class="card-subtitle-therapist">Upcoming Appointments</div>
+                        </div>
                     </div>
-                </div>
-                <div class="card-therapist stats-card">
-                    <div class="card-body-therapist text-center">
-                        <i class="fas fa-envelope fa-2x mb-2"></i>
-                        <h3 style="margin: 10px 0 0 0;"><?php echo $unread_count ?? 0; ?></h3>
-                        <div class="card-subtitle-therapist">Unread Messages</div>
+                </a>
+                <a href="messages.php" class="stats-card-link">
+                    <div class="card-therapist stats-card">
+                        <div class="card-body-therapist text-center">
+                            <i class="fas fa-envelope fa-2x mb-2"></i>
+                            <h3 style="margin: 10px 0 0 0;"><?php echo $unread_count ?? 0; ?></h3>
+                            <div class="card-subtitle-therapist">Unread Messages</div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <!-- Upcoming Appointments Card -->
@@ -245,7 +259,7 @@ $conn->close();
                                             </div>
                                         </td>
                                     </tr>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>

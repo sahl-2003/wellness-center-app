@@ -294,10 +294,14 @@ $conn->close();
             const sliderContainer = document.querySelector('.team-slider-container');
             let currentIndex = 0;
             const totalSlides = slides.length;
+
+            if (totalSlides === 0) return;
+
             // Create dots container
             const dotsContainer = document.createElement('div');
             dotsContainer.className = 'slider-dots';
-            sliderContainer.appendChild(dotsContainer);
+            if(sliderContainer) sliderContainer.appendChild(dotsContainer);
+
             // Create dots
             for (let i = 0; i < totalSlides; i++) {
                 const dot = document.createElement('span');
@@ -306,6 +310,7 @@ $conn->close();
                 dotsContainer.appendChild(dot);
             }
             const dots = document.querySelectorAll('.dot');
+
             function initSlider() {
                 slides.forEach((slide, index) => {
                     slide.classList.remove('active', 'prev', 'next');
@@ -313,57 +318,65 @@ $conn->close();
                     slide.style.filter = '';
                     slide.style.zIndex = '';
                     slide.style.opacity = '';
+                    
                     const position = (index - currentIndex + totalSlides) % totalSlides;
+                    
                     if (index === currentIndex) {
                         slide.classList.add('active');
                         slide.style.zIndex = '10';
-                        slide.style.transform = 'translateX(0) scale(1)';
+                        slide.style.transform = 'translateX(-50%) scale(1)';
                         slide.style.filter = 'none';
                         slide.style.opacity = '1';
-                    } else if (position === totalSlides - 1 || index === currentIndex - 1) {
+                    } else if (position === totalSlides - 1) { // Previous slide
                         slide.classList.add('prev');
-                        slide.style.transform = 'translateX(-80%) scale(0.85)';
-                        slide.style.filter = 'blur(3px)';
                         slide.style.zIndex = '5';
-                        slide.style.opacity = '0.9';
-                    } else if (position === 1 || index === currentIndex + 1) {
+                        slide.style.transform = 'translateX(-105%) scale(0.85)';
+                        slide.style.filter = 'blur(3px)';
+                        slide.style.opacity = '0.7';
+                    } else if (position === 1) { // Next slide
                         slide.classList.add('next');
-                        slide.style.transform = 'translateX(80%) scale(0.85)';
-                        slide.style.filter = 'blur(3px)';
                         slide.style.zIndex = '5';
-                        slide.style.opacity = '0.9';
-                    } else {
-                        slide.style.transform = 'translateX(0) scale(0.7)';
-                        slide.style.filter = 'blur(6px)';
+                        slide.style.transform = 'translateX(5%) scale(0.85)';
+                        slide.style.filter = 'blur(3px)';
+                        slide.style.opacity = '0.7';
+                    } else { // Other slides
                         slide.style.zIndex = '1';
-                        slide.style.opacity = '0.6';
+                        slide.style.transform = 'translateX(-50%) scale(0.7)';
+                        slide.style.filter = 'blur(6px)';
+                        slide.style.opacity = '0';
                     }
                 });
+
                 dots.forEach((dot, index) => {
                     dot.classList.toggle('active', index === currentIndex);
                 });
             }
+
             function goToSlide(index) {
                 currentIndex = index;
                 initSlider();
             }
-            function goToPrev() {
-                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-                initSlider();
+
+            if(prevArrow) {
+                prevArrow.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                    initSlider();
+                });
             }
-            function goToNext() {
-                currentIndex = (currentIndex + 1) % totalSlides;
-                initSlider();
+
+            if(nextArrow) {
+                nextArrow.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % totalSlides;
+                    initSlider();
+                });
             }
-            prevArrow.addEventListener('click', goToPrev);
-            nextArrow.addEventListener('click', goToNext);
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'ArrowLeft') {
-                    goToPrev();
-                } else if (e.key === 'ArrowRight') {
-                    goToNext();
-                }
-            });
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    goToSlide(parseInt(e.target.dataset.index));
+                })
+            })
+
             initSlider();
         });
     </script>
