@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="container">
         <nav>
             <div class="logo">
-                <img src="image/logo.png" alt="GreenLife"><span>GreenLife</span>
+                <img src="image/logo.png" alt="GreenLife"><span>GreenLife Wellness Center</span>
             </div>
             <ul class="nav-links">
                 <li><a href="index.php" <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'class="active"' : ''; ?>>Home</a></li>

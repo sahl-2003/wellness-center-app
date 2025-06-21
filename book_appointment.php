@@ -18,6 +18,40 @@ $success = '';
 
 $therapist_id = isset($_GET['therapist_id']) ? intval($_GET['therapist_id']) : 0;
 
+// Handle rebook functionality
+$rebook_data = null;
+if (isset($_GET['rebook'])) {
+    $rebook_id = intval($_GET['rebook']);
+    
+    // Get the cancelled appointment details
+    $rebook_stmt = $conn->prepare("
+        SELECT 
+            a.therapist_id,
+            a.service_id,
+            a.appointment_date,
+            a.start_time,
+            a.notes,
+            s.name as service_name,
+            u.username as therapist_name
+        FROM appointments a
+        JOIN services s ON a.service_id = s.service_id
+        JOIN users u ON a.therapist_id = u.user_id
+        WHERE a.id = ? AND a.user_id = ? AND a.status = 'cancelled'
+    ");
+    $rebook_stmt->bind_param("ii", $rebook_id, $_SESSION['user_id']);
+    $rebook_stmt->execute();
+    $rebook_result = $rebook_stmt->get_result();
+    
+    if ($rebook_result->num_rows > 0) {
+        $rebook_data = $rebook_result->fetch_assoc();
+        $therapist_id = $rebook_data['therapist_id'];
+        $page_title = 'Rebook Appointment';
+    } else {
+        $error = 'Invalid rebook request. Appointment not found or not cancelled.';
+    }
+    $rebook_stmt->close();
+}
+
 // Get all therapists
 $therapists = [];
 $sql = "SELECT user_id, username FROM users WHERE role = 'therapist' ORDER BY username";
@@ -136,6 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 FROM appointments 
                 WHERE therapist_id = ? 
                 AND appointment_date = ? 
+                AND status != 'cancelled'
                 AND (
                     (start_time <= ? AND end_time > ?) OR
                     (start_time < ? AND end_time >= ?) OR
@@ -248,8 +283,13 @@ $conn->close();
     <section class="booking-hero">
         <div class="container">
             <div class="booking-hero-content">
-                <h1>Book Your Wellness Session</h1>
-                <p>Select your preferred service, therapist, and available time slot</p>
+                <?php if ($rebook_data): ?>
+                    <h1>Rebook Your Appointment</h1>
+                    <p>Recreating your cancelled appointment with <?php echo htmlspecialchars($rebook_data['therapist_name']); ?> for <?php echo htmlspecialchars($rebook_data['service_name']); ?></p>
+                <?php else: ?>
+                    <h1>Book Your Wellness Session</h1>
+                    <p>Select your preferred service, therapist, and available time slot</p>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -279,7 +319,11 @@ $conn->close();
                             <div class="service-options">
                                 <?php foreach ($services as $service): ?>
                                 <div class="service-option">
-                                    <input type="radio" name="service_id" id="service_<?php echo $service['service_id']; ?>" value="<?php echo $service['service_id']; ?>" <?php if (empty($_POST['service_id']) && $service === reset($services)) echo 'checked'; if (!empty($_POST['service_id']) && $_POST['service_id'] == $service['service_id']) echo 'checked'; ?>>
+                                    <input type="radio" name="service_id" id="service_<?php echo $service['service_id']; ?>" value="<?php echo $service['service_id']; ?>" <?php 
+                                        if ($rebook_data && $rebook_data['service_id'] == $service['service_id']) echo 'checked';
+                                        elseif (empty($_POST['service_id']) && $service === reset($services)) echo 'checked'; 
+                                        if (!empty($_POST['service_id']) && $_POST['service_id'] == $service['service_id']) echo 'checked'; 
+                                    ?>>
                                     <label for="service_<?php echo $service['service_id']; ?>">
                                         <div class="service-icon">
                                             <i class="fas fa-spa"></i>
@@ -289,7 +333,7 @@ $conn->close();
                                             <p>Duration: <?php echo htmlspecialchars($service['duration']); ?> mins</p>
                                             <div class="service-meta">
                                                 <span><i class="fas fa-clock"></i> <?php echo htmlspecialchars($service['duration']); ?> mins</span>
-                                                <span><i class="fas fa-rupee-sign"></i> ₹<?php echo htmlspecialchars($service['price']); ?></span>
+                                                <span><i class="fas fa-rupee-sign"></i> RS <?php echo htmlspecialchars($service['price']); ?></span>
                                             </div>
                                         </div>
                                     </label>
@@ -306,7 +350,10 @@ $conn->close();
                             <div class="therapist-options">
                                 <?php foreach ($therapists as $therapist): ?>
                                 <div class="therapist-option">
-                                    <input type="radio" name="therapist_id" id="therapist_<?php echo $therapist['user_id']; ?>" value="<?php echo $therapist['user_id']; ?>" <?php if (!empty($_POST['therapist_id']) && $_POST['therapist_id'] == $therapist['user_id']) echo 'checked'; ?>>
+                                    <input type="radio" name="therapist_id" id="therapist_<?php echo $therapist['user_id']; ?>" value="<?php echo $therapist['user_id']; ?>" <?php 
+                                        if ($rebook_data && $rebook_data['therapist_id'] == $therapist['user_id']) echo 'checked';
+                                        if (!empty($_POST['therapist_id']) && $_POST['therapist_id'] == $therapist['user_id']) echo 'checked'; 
+                                    ?>>
                                     <label for="therapist_<?php echo $therapist['user_id']; ?>">
                                         <div class="therapist-info">
                                             <h3><?php echo htmlspecialchars($therapist['username']); ?></h3>
@@ -343,7 +390,13 @@ $conn->close();
                             <h2>Confirm Your Appointment</h2>
                             <div class="form-group">
                                 <label for="notes">Notes (optional)</label>
-                                <textarea id="notes" name="notes" class="form-control" rows="3"><?php echo isset($_POST['notes']) ? htmlspecialchars($_POST['notes']) : ''; ?></textarea>
+                                <textarea id="notes" name="notes" class="form-control" rows="3"><?php 
+                                    if ($rebook_data && !empty($rebook_data['notes'])) {
+                                        echo htmlspecialchars($rebook_data['notes']);
+                                    } elseif (isset($_POST['notes'])) {
+                                        echo htmlspecialchars($_POST['notes']);
+                                    }
+                                ?></textarea>
                             </div>
                             <div class="step-actions">
                                 <button type="button" class="btn btn-secondary prev-step"><i class="fas fa-arrow-left"></i> Back</button>
@@ -429,6 +482,23 @@ $conn->close();
             selectedTherapist = document.querySelector('input[name="therapist_id"]:checked').value;
             fetchAvailableDays(selectedTherapist);
         }
+        
+        // Auto-initialize for rebook
+        <?php if ($rebook_data): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            selectedTherapist = <?php echo $rebook_data['therapist_id']; ?>;
+            fetchAvailableDays(selectedTherapist);
+            
+            // Set the appointment date if available
+            setTimeout(function() {
+                const dateInput = document.getElementById('appointment_date');
+                if (dateInput) {
+                    dateInput.value = '<?php echo $rebook_data['appointment_date']; ?>';
+                    fetchAvailableSlots(selectedTherapist, '<?php echo $rebook_data['appointment_date']; ?>');
+                }
+            }, 1000);
+        });
+        <?php endif; ?>
     </script>
 </body>
 </html>

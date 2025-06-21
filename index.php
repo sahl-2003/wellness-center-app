@@ -97,7 +97,7 @@
                         <p>Traditional healing system using herbal treatments and massage techniques.</p>
                         <div class="service-meta">
                             <span><i class="fas fa-clock"></i> 60-90 mins</span>
-                            <span><i class="fas fa-rupee-sign"></i> From ₹2,500</span>
+                            <span><i class="fas fa-rupee-sign"></i> From RS 2,500</span>
                         </div>
                         <a href="services.php#ayurveda" class="btn btn-small">Learn More</a>
                     </div>
@@ -237,7 +237,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="logo">
-                        <img src="image/logo.png" alt="GreenLife "><span>GreenLife</span>
+                        <img src="image/logo.png" alt="GreenLife "><span>GreenLife Wellness Center</span>
                     </div>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>

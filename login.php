@@ -109,7 +109,7 @@ $conn->close();
                 <div class="footer-section">
                     <div class="logo">
                         <img src="image/logo.png" alt="GreenLife">
-                        <span>GreenLife</span>
+                        <span>GreenLife Wellness Center</span>
                     </div>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>

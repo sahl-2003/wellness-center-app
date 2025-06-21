@@ -56,6 +56,7 @@ nav {
     .logo img {
         width: 80px; /* Adjust as needed */
         height: auto;
+        margin-right:15px;
     }
 
 .nav-links {

@@ -178,7 +178,7 @@ if (!$service && $service_id > 0) {
                                 <input type="number" id="duration" name="duration" value="<?php echo htmlspecialchars($service['duration']); ?>" required min="1" style="width:100%;padding:10px 12px;border-radius:6px;border:1px solid #ccc;">
                             </div>
                             <div style="flex:1;">
-                                <label for="price" style="display:block;font-weight:500;margin-bottom:6px;">Price ($)</label>
+                                <label for="price" style="display:block;font-weight:500;margin-bottom:6px;">Price (RS)</label>
                                 <input type="number" id="price" name="price" value="<?php echo htmlspecialchars($service['price']); ?>" required min="1" step="0.01" style="width:100%;padding:10px 12px;border-radius:6px;border:1px solid #ccc;">
                             </div>
                         </div>

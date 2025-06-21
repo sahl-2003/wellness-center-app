@@ -46,6 +46,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_appointment'])
     $stmt->close();
 }
 
+// Handle appointment rescheduling
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reschedule_appointment'])) {
+    $appointment_id = intval($_POST['appointment_id']);
+    $new_date = $_POST['new_date'];
+    $new_start_time = $_POST['new_start_time'];
+    $new_end_time = $_POST['new_end_time'];
+    
+    // Verify the appointment belongs to the current client and is pending
+    $stmt = $conn->prepare("SELECT status, service_id, therapist_id FROM appointments WHERE id = ? AND user_id = ? AND status = 'pending'");
+    $stmt->bind_param("ii", $appointment_id, $_SESSION['user_id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $appointment = $result->fetch_assoc();
+        
+        // Check for conflicts with other appointments
+        $conflict_stmt = $conn->prepare("
+            SELECT COUNT(*) as count 
+            FROM appointments 
+            WHERE therapist_id = ? 
+            AND appointment_date = ? 
+            AND status != 'cancelled'
+            AND id != ?
+            AND (
+                (start_time <= ? AND end_time > ?) OR
+                (start_time < ? AND end_time >= ?) OR
+                (start_time >= ? AND start_time < ?)
+            )
+        ");
+        $conflict_stmt->bind_param("isissssss", 
+            $appointment['therapist_id'], 
+            $new_date, 
+            $appointment_id,
+            $new_start_time, 
+            $new_start_time,
+            $new_end_time, 
+            $new_end_time,
+            $new_start_time, 
+            $new_end_time
+        );
+        $conflict_stmt->execute();
+        $conflict_result = $conflict_stmt->get_result();
+        $conflict_count = $conflict_result->fetch_assoc()['count'];
+        $conflict_stmt->close();
+        
+        if ($conflict_count > 0) {
+            $error = 'This time slot is already booked. Please choose a different time.';
+        } else {
+            // Update the appointment
+            $update_stmt = $conn->prepare("UPDATE appointments SET appointment_date = ?, start_time = ?, end_time = ?, status = 'pending' WHERE id = ? AND user_id = ?");
+            $update_stmt->bind_param("sssii", $new_date, $new_start_time, $new_end_time, $appointment_id, $_SESSION['user_id']);
+            
+            if ($update_stmt->execute()) {
+                $success = 'Appointment rescheduled successfully! It is now pending approval.';
+            } else {
+                $error = 'Error rescheduling appointment: ' . $conn->error;
+            }
+            $update_stmt->close();
+        }
+    } else {
+        $error = 'Appointment not found or cannot be rescheduled.';
+    }
+    $stmt->close();
+}
+
 // Get client profile for sidebar
 $profile = null;
 $profile_stmt = $conn->prepare("SELECT * FROM client_profiles WHERE user_id = ?");
@@ -191,7 +257,7 @@ $conn->close();
                                 <div class="appointment-details" id="details-<?php echo $appointment['appointment_id']; ?>" style="display: none;">
                                     <h6>Service Details:</h6>
                                     <p><?php echo htmlspecialchars($appointment['service_description']); ?></p>
-                                    <p><strong>Amount:</strong> $<?php echo number_format($appointment['service_price'], 2); ?></p>
+                                    <p><strong>Amount:</strong> RS <?php echo number_format($appointment['service_price'], 2); ?></p>
                                     <h6 class="mt-3">Therapist Information:</h6>
                                     <p><strong>Name:</strong> <?php echo htmlspecialchars($appointment['therapist_name']); ?><br><strong>Email:</strong> <?php echo htmlspecialchars($appointment['therapist_email']); ?><br><strong>Specialization:</strong> <?php echo htmlspecialchars($appointment['therapist_specialization'] ?? 'Not specified'); ?></p>
                                     <?php if (!empty($appointment['notes'])): ?>
@@ -208,14 +274,23 @@ $conn->close();
                                         </form>
                                     <?php endif; ?>
                                     <?php if ($appointment['status'] === 'pending'): ?>
-                                        <a href="reschedule_appointment.php?id=<?php echo $appointment['appointment_id']; ?>" class="btn-custom btn-custom-warning"><i class="fas fa-calendar-alt me-1"></i> Reschedule</a>
+                                        <button class="btn-custom btn-custom-warning reschedule-btn" 
+                                            data-appointment-id="<?php echo $appointment['appointment_id']; ?>"
+                                            data-current-date="<?php echo htmlspecialchars(date('Y-m-d', strtotime($appointment['appointment_date']))); ?>"
+                                            data-current-start="<?php echo htmlspecialchars(date('H:i', strtotime($appointment['start_time']))); ?>"
+                                            data-current-end="<?php echo htmlspecialchars(date('H:i', strtotime($appointment['end_time']))); ?>">
+                                            <i class="fas fa-calendar-alt me-1"></i> Reschedule
+                                        </button>
+                                    <?php endif; ?>
+                                    <?php if ($appointment['status'] === 'cancelled'): ?>
+                                        <a href="book_appointment.php?rebook=<?php echo $appointment['appointment_id']; ?>" class="btn-custom btn-custom-success"><i class="fas fa-calendar-plus me-1"></i> Rebook</a>
                                     <?php endif; ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <?php endforeach; ?>
-                    <div class="alert-custom alert-info-custom text-end mt-4"><strong>Subtotal for all appointments:</strong> $<?php echo number_format($subtotal, 2); ?></div>
+                    <div class="alert-custom alert-info-custom text-end mt-4"><strong>Subtotal for all appointments:</strong> RS <?php echo number_format($subtotal, 2); ?></div>
                 <?php endif; ?>
             </div>
         </div>
@@ -234,6 +309,59 @@ $conn->close();
                     this.innerHTML = '<i class="fas fa-eye me-1"></i> Details';
                 }
             });
+        });
+    </script>
+
+    <!-- Reschedule Modal Popup -->
+    <div id="reschedule-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:1000;"></div>
+    <div id="reschedule-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:32px 28px;z-index:1001;min-width:320px;max-width:95vw;">
+        <button id="close-reschedule-modal" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.5rem;color:#888;cursor:pointer;">&times;</button>
+        <h2 style="margin-top:0;font-size:1.3rem;margin-bottom:18px;color:#333;">Reschedule Appointment</h2>
+        <form method="post" style="display:flex;flex-direction:column;gap:14px;min-width:220px;">
+            <input type="hidden" name="appointment_id" id="reschedule-appointment-id" value="">
+            <input type="hidden" name="reschedule_appointment" value="1">
+            <label style="font-weight:500;">New Date
+                <input type="date" name="new_date" required style="margin-top:4px;padding:7px 10px;border-radius:6px;border:1px solid #ccc;width:100%;">
+            </label>
+            <label style="font-weight:500;">New Start Time
+                <input type="time" name="new_start_time" required style="margin-top:4px;padding:7px 10px;border-radius:6px;border:1px solid #ccc;width:100%;">
+            </label>
+            <label style="font-weight:500;">New End Time
+                <input type="time" name="new_end_time" required style="margin-top:4px;padding:7px 10px;border-radius:6px;border:1px solid #ccc;width:100%;">
+            </label>
+            <button type="submit" class="btn-custom btn-custom-warning" style="margin-top:10px;">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Reschedule modal logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('reschedule-modal');
+            const overlay = document.getElementById('reschedule-modal-overlay');
+            let currentAppointmentId = null;
+
+            document.querySelectorAll('.reschedule-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    currentAppointmentId = this.getAttribute('data-appointment-id');
+                    document.getElementById('reschedule-appointment-id').value = currentAppointmentId;
+                    // Set current values
+                    document.querySelector('#reschedule-modal input[name="new_date"]').value = this.getAttribute('data-current-date');
+                    document.querySelector('#reschedule-modal input[name="new_start_time"]').value = this.getAttribute('data-current-start');
+                    document.querySelector('#reschedule-modal input[name="new_end_time"]').value = this.getAttribute('data-current-end');
+                    modal.style.display = 'block';
+                    overlay.style.display = 'block';
+                });
+            });
+
+            document.getElementById('close-reschedule-modal').onclick = function() {
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+            };
+
+            overlay.onclick = function() {
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+            };
         });
     </script>
 </body>

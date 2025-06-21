@@ -167,7 +167,7 @@ $conn->close();
                                     <?php foreach ($recent_services as $service): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($service['name']); ?></td>
-                                        <td>$<?php echo number_format($service['price'], 2); ?></td>
+                                        <td>RS <?php echo number_format($service['price'], 2); ?></td>
                                         <td>
                                             <span class="badge <?php echo $service['is_active'] ? 'bg-success' : 'bg-secondary'; ?>">
                                                 <?php echo $service['is_active'] ? 'Active' : 'Inactive'; ?>

@@ -144,7 +144,7 @@ $conn->close();
                                     <td><?php echo htmlspecialchars($service['name']); ?></td>
                                     <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?php echo htmlspecialchars($service['description']); ?></td>
                                     <td><?php echo htmlspecialchars($service['duration']); ?> min</td>
-                                    <td>$<?php echo number_format($service['price'], 2); ?></td>
+                                    <td>RS <?php echo number_format($service['price'], 2); ?></td>
                                     <td><?php echo htmlspecialchars(isset($service['category']) ? $service['category'] : 'N/A'); ?></td>
                                     <td>
                                         <span class="badge <?php echo $service['is_active'] ? 'bg-success' : 'bg-secondary'; ?>">
