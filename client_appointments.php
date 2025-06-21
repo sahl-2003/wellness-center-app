@@ -107,6 +107,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?></title>
     <link rel="stylesheet" href="client_dashboard_custom.css">
+    <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Remove all previous embedded styles, as they are now in the CSS file */
@@ -117,13 +118,12 @@ $conn->close();
         <!-- Sidebar -->
         <div class="dashboard-sidebar-custom">
             <div class="text-center mb-4">
-                <div class="profile-image-container mb-3">
+                <div class="mb-3">
                     <?php if ($profile && !empty($profile['profile_picture'])): ?>
                         <img src="../<?php echo htmlspecialchars($profile['profile_picture']); ?>" class="profile-picture" alt="Profile Picture">
                     <?php else: ?>
                         <img src="../assets/images/default-profile.jpg" class="profile-picture" alt="Profile Picture">
                     <?php endif; ?>
-                    <div class="profile-image-overlay"><i class="fas fa-camera fa-2x"></i></div>
                 </div>
                 <h5><?php echo htmlspecialchars($profile['full_name'] ?? $_SESSION['username']); ?></h5>
                 <small>Client Account</small>

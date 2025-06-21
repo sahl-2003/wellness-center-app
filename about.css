@@ -434,3 +434,449 @@
     margin: 0 auto;
     /* You can adjust padding if needed */
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+    .about-hero {
+        padding: 120px 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 3.5rem;
+    }
+    
+    .about-hero p {
+        font-size: 1.3rem;
+    }
+    
+    .about-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+    }
+    
+    .about-text h2 {
+        font-size: 2.5rem;
+    }
+    
+    .about-text p {
+        font-size: 1.1rem;
+    }
+    
+    .team-section {
+        padding: 100px 0;
+    }
+    
+    .team-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+    }
+    
+    .team-member {
+        padding: 30px;
+    }
+    
+    .team-member h3 {
+        font-size: 1.5rem;
+    }
+    
+    .team-member p {
+        font-size: 1rem;
+    }
+}
+
+/* Desktop (1200px to 1399px) */
+@media (max-width: 1399px) {
+    .about-hero h1 {
+        font-size: 3rem;
+    }
+    
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+}
+
+/* Tablet Large (992px to 1199px) */
+@media (max-width: 1199px) {
+    .about-hero {
+        padding: 80px 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .about-hero p {
+        font-size: 1.1rem;
+    }
+    
+    .about-content {
+        gap: 40px;
+    }
+    
+    .about-text h2 {
+        font-size: 2.2rem;
+    }
+    
+    .about-text p {
+        font-size: 1rem;
+    }
+    
+    .team-section {
+        padding: 80px 0;
+    }
+    
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    
+    .team-member {
+        padding: 25px;
+    }
+    
+    .team-member h3 {
+        font-size: 1.3rem;
+    }
+    
+    .team-member p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Tablet (768px to 991px) */
+@media (max-width: 991px) {
+    .about-hero {
+        padding: 60px 0;
+        text-align: center;
+    }
+    
+    .about-hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .about-hero p {
+        font-size: 1rem;
+    }
+    
+    .about-section {
+        padding: 60px 0;
+    }
+    
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .about-image {
+        order: -1;
+    }
+    
+    .about-text h2 {
+        font-size: 1.8rem;
+    }
+    
+    .team-section {
+        padding: 60px 0;
+    }
+    
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .team-member {
+        padding: 20px;
+    }
+    
+    .team-member h3 {
+        font-size: 1.2rem;
+    }
+    
+    .team-member p {
+        font-size: 0.9rem;
+    }
+    
+    .team-member img {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* Mobile Large (576px to 767px) */
+@media (max-width: 767px) {
+    .about-hero {
+        padding: 50px 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .about-hero p {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+    
+    .about-section {
+        padding: 50px 0;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+    }
+    
+    .about-content {
+        gap: 25px;
+    }
+    
+    .about-text h2 {
+        font-size: 1.6rem;
+    }
+    
+    .about-text p {
+        font-size: 0.9rem;
+    }
+    
+    .about-image img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .team-section {
+        padding: 50px 0;
+    }
+    
+    .team-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .team-member {
+        padding: 18px;
+    }
+    
+    .team-member h3 {
+        font-size: 1.1rem;
+    }
+    
+    .team-member p {
+        font-size: 0.85rem;
+    }
+    
+    .team-member img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* Mobile Small (up to 575px) */
+@media (max-width: 575px) {
+    .about-hero {
+        padding: 40px 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 1.6rem;
+        margin-bottom: 12px;
+    }
+    
+    .about-hero p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    
+    .about-section {
+        padding: 40px 0;
+    }
+    
+    .section-title {
+        font-size: 1.6rem;
+        margin-bottom: 25px;
+    }
+    
+    .about-content {
+        gap: 20px;
+    }
+    
+    .about-text h2 {
+        font-size: 1.4rem;
+    }
+    
+    .about-text p {
+        font-size: 0.85rem;
+    }
+    
+    .team-section {
+        padding: 40px 0;
+    }
+    
+    .team-grid {
+        gap: 15px;
+    }
+    
+    .team-member {
+        padding: 15px;
+    }
+    
+    .team-member h3 {
+        font-size: 1rem;
+    }
+    
+    .team-member p {
+        font-size: 0.8rem;
+    }
+    
+    .team-member img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* Extra Small Mobile (up to 375px) */
+@media (max-width: 375px) {
+    .about-hero {
+        padding: 30px 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+    
+    .about-hero p {
+        font-size: 0.8rem;
+        margin-bottom: 18px;
+    }
+    
+    .about-section {
+        padding: 30px 0;
+    }
+    
+    .section-title {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+    
+    .about-text h2 {
+        font-size: 1.3rem;
+    }
+    
+    .about-text p {
+        font-size: 0.8rem;
+    }
+    
+    .team-section {
+        padding: 30px 0;
+    }
+    
+    .team-member {
+        padding: 12px;
+    }
+    
+    .team-member h3 {
+        font-size: 0.95rem;
+    }
+    
+    .team-member p {
+        font-size: 0.75rem;
+    }
+    
+    .team-member img {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .about-hero {
+        padding: 25px 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+    }
+    
+    .about-hero p {
+        font-size: 0.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .about-section {
+        padding: 25px 0;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .about-content {
+        gap: 15px;
+    }
+    
+    .about-text h2 {
+        font-size: 1.1rem;
+    }
+    
+    .about-text p {
+        font-size: 0.8rem;
+    }
+    
+    .team-section {
+        padding: 25px 0;
+    }
+    
+    .team-grid {
+        gap: 10px;
+    }
+    
+    .team-member {
+        padding: 10px;
+    }
+    
+    .team-member h3 {
+        font-size: 0.9rem;
+    }
+    
+    .team-member p {
+        font-size: 0.75rem;
+    }
+    
+    .team-member img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .about-hero {
+        padding: 20px 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 1.5rem;
+        color: #000;
+    }
+    
+    .about-hero p {
+        font-size: 0.9rem;
+        color: #333;
+    }
+    
+    .about-content {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

@@ -164,14 +164,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     $stmt = $conn->prepare("
                         INSERT INTO appointments 
-                        (user_id, therapist_id, service_id, appointment_date, start_time, end_time, notes, status)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, 'scheduled')
+                        (user_id, therapist_id, service_id, appointment_date, start_time, end_time, appointment_time, notes, status)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
                     ");
-                    $stmt->bind_param("iiissss", $_SESSION['user_id'], $therapist_id, $service_id, 
-                                     $appointment_date, $start_time, $end_time, $notes);
+                    $stmt->bind_param("iiisssss", $_SESSION['user_id'], $therapist_id, $service_id, 
+                                     $appointment_date, $start_time, $end_time, $start_time, $notes);
                     
                     if ($stmt->execute()) {
-                        $success = 'Appointment booked successfully!';
+                        $success = 'Appointment booked successfully! It is now pending approval.';
                         header("Refresh: 2; url=client_appointments.php");
                     }
                     $stmt->close();

@@ -132,6 +132,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($page_title); ?></title>
     <link rel="stylesheet" href="client_dashboard_custom.css">
+    <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Remove all previous embedded styles, as they are now in the CSS file */
@@ -260,7 +261,7 @@ $conn->close();
                         </div>
                         <?php if (!empty($upcoming_appointments)): ?>
                             <div class="alert-custom alert-info-custom text-end mt-4">
-                                <strong>Subtotal for upcoming appointments:</strong> $<?php echo number_format($subtotal, 2); ?>
+                                <strong>Subtotal for upcoming appointments:</strong> RS <?php echo number_format($subtotal, 2); ?>
                             </div>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -281,20 +282,20 @@ $conn->close();
                 <div style="flex: 1 1 30%; min-width: 260px;">
                     <div class="card-custom h-100">
                         <div class="card-body-custom text-center">
-                            <i class="fas fa-calendar-plus fa-3x mb-3 text-success"></i>
+                            <i class="fas fa-calendar-plus fa-3x mb-3 text-primary"></i>
                             <h5>Book Appointment</h5>
                             <p>Schedule a new therapy session with your preferred therapist.</p>
-                            <a href="book_appointment.php" class="btn-custom btn-custom-secondary">Book Now</a>
+                            <a href="book_appointment.php" class="btn-custom">Book Now</a>
                         </div>
                     </div>
                 </div>
                 <div style="flex: 1 1 30%; min-width: 260px;">
                     <div class="card-custom h-100">
                         <div class="card-body-custom text-center">
-                            <i class="fas fa-envelope fa-3x mb-3 text-info"></i>
+                            <i class="fas fa-envelope fa-3x mb-3 text-primary"></i>
                             <h5>Messages</h5>
                             <p>Communicate with your therapist and get support.</p>
-                            <a href="client_messages.php" class="btn-custom btn-custom-secondary">View Messages</a>
+                            <a href="client_messages.php" class="btn-custom">View Messages</a>
                         </div>
                     </div>
                 </div>

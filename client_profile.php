@@ -32,6 +32,19 @@ $result = $stmt->get_result();
 $profile = $result->fetch_assoc();
 $stmt->close();
 
+// Get unread messages count for sidebar
+$unread_count = 0;
+$msg_stmt = $conn->prepare("SELECT COUNT(*) as count FROM messages WHERE receiver_id = ? AND is_read = FALSE");
+if ($msg_stmt) {
+    $msg_stmt->bind_param("i", $_SESSION['user_id']);
+    $msg_stmt->execute();
+    $msg_result = $msg_stmt->get_result();
+    $unread_count = $msg_result->fetch_assoc()['count'];
+    $msg_stmt->close();
+} else {
+    error_log("Error preparing unread count query: " . $conn->error);
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = trim($_POST['full_name']);
@@ -132,7 +145,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -141,6 +153,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?></title>
     <link rel="stylesheet" href="client_dashboard_custom.css">
+    <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Remove all previous embedded styles, as they are now in the CSS file */
@@ -166,7 +179,7 @@ $conn->close();
                 <li><a class="sidebar-link active" href="client_profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
                 <li><a class="sidebar-link" href="client_therapists.php"><i class="fas fa-user-md me-2"></i>Therapists</a></li>
                 <li><a class="sidebar-link" href="client_appointments.php"><i class="fas fa-calendar-check me-2"></i>Appointments</a></li>
-                <li><a class="sidebar-link" href="client_messages.php"><i class="fas fa-envelope me-2"></i>Messages</a></li>
+                <li class="position-relative"><a class="sidebar-link" href="client_messages.php"><i class="fas fa-envelope me-2"></i>Messages<?php if ($unread_count > 0): ?><span class="sidebar-badge"><?php echo $unread_count; ?></span><?php endif; ?></a></li>
                 <li class="mt-3"><a class="sidebar-link text-primary" href="index.php"><i class="fas fa-arrow-left me-2"></i>Go Back</a></li>
             </ul>
         </div>
@@ -270,3 +283,6 @@ $conn->close();
     </script>
 </body>
 </html>
+<?php
+$conn->close();
+?>

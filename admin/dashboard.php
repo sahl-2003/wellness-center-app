@@ -50,6 +50,14 @@ while ($row = $result->fetch_assoc()) {
     $recent_services[] = $row;
 }
 
+// Get unread messages count (contact messages from public contact form)
+$unread_count = 0;
+$sql = "SELECT COUNT(*) as count FROM contact_messages WHERE is_read = FALSE";
+$result = $conn->query($sql);
+if ($result) {
+    $unread_count = $result->fetch_assoc()['count'];
+}
+
 $conn->close();
 ?>
 
@@ -66,24 +74,22 @@ $conn->close();
     <div class="admin-flex">
         <!-- Sidebar -->
         <div class="admin-sidebar">
-            <div class="admin-sidebar-header">
-                <h4>Admin Panel</h4>
-                <hr>
-                <div class="admin-profile">
-                    <i class="fas fa-user-circle fa-3x"></i>
-                    <div>
-                        <h6><?php echo htmlspecialchars($admin['username']); ?></h6>
-                        <small><?php echo htmlspecialchars($admin['email']); ?></small>
-                    </div>
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <img src="../image/c2.jpg" alt="Admin Profile" class="admin-profile-pic">
                 </div>
+                <h5><?php echo htmlspecialchars($admin['username']); ?></h5>
+                <small><?php echo htmlspecialchars($admin['email']); ?></small>
+                <div class="mt-2 admin-badge">Administrator</div>
             </div>
             <ul class="admin-nav">
-                <li><a class="admin-nav-link active" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                <li><a class="admin-nav-link" href="users.php"><i class="fas fa-users me-2"></i>Manage Users</a></li>
-                <li><a class="admin-nav-link" href="therapists.php"><i class="fas fa-user-md me-2"></i>Therapists</a></li>
-                <li><a class="admin-nav-link" href="services.php"><i class="fas fa-concierge-bell me-2"></i>Services</a></li>
-                <li><a class="admin-nav-link" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                <li class="mt-3"><a class="admin-nav-link text-danger" href="../logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                <li><a class="admin-nav-link active" href="dashboard.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a class="admin-nav-link" href="users.php"><i class="fas fa-users"></i>Manage Users</a></li>
+                <li><a class="admin-nav-link" href="therapists.php"><i class="fas fa-user-md"></i>Therapists</a></li>
+                <li><a class="admin-nav-link" href="services.php"><i class="fas fa-concierge-bell"></i>Services</a></li>
+                <li><a class="admin-nav-link" href="appointments.php"><i class="fas fa-calendar-check"></i>Appointments</a></li>
+                <li><a class="admin-nav-link" href="messages.php"><i class="fas fa-envelope"></i>Messages<?php if ($unread_count > 0): ?><span class="sidebar-badge"><?php echo $unread_count; ?></span><?php endif; ?></a></li>
+                <li class="mt-3"><a class="admin-nav-link text-danger" href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
             </ul>
         </div>
         <!-- Main Content -->
@@ -96,33 +102,25 @@ $conn->close();
             </div>
             <!-- Stats Cards -->
             <div class="admin-stats-grid">
-                <div class="admin-card admin-card-primary">
-                    <div class="admin-card-body">
+                <div class="admin-stat-card admin-card-primary">
                         <h5>Total Users</h5>
                         <h2><?php echo $stats['total_users']; ?></h2>
-                        <i class="fas fa-users fa-2x float-end"></i>
-                    </div>
+                    <i class="fas fa-users"></i>
                 </div>
-                <div class="admin-card admin-card-success">
-                    <div class="admin-card-body">
+                <div class="admin-stat-card admin-card-success">
                         <h5>Therapists</h5>
                         <h2><?php echo $stats['total_therapists']; ?></h2>
-                        <i class="fas fa-user-md fa-2x float-end"></i>
-                    </div>
+                    <i class="fas fa-user-md"></i>
                 </div>
-                <div class="admin-card admin-card-info">
-                    <div class="admin-card-body">
+                <div class="admin-stat-card admin-card-info">
                         <h5>Clients</h5>
                         <h2><?php echo $stats['total_clients']; ?></h2>
-                        <i class="fas fa-user fa-2x float-end"></i>
-                    </div>
+                    <i class="fas fa-user"></i>
                 </div>
-                <div class="admin-card admin-card-warning">
-                    <div class="admin-card-body">
+                <div class="admin-stat-card admin-card-warning">
                         <h5>Services</h5>
                         <h2><?php echo $stats['total_services']; ?></h2>
-                        <i class="fas fa-concierge-bell fa-2x float-end"></i>
-                    </div>
+                    <i class="fas fa-concierge-bell"></i>
                 </div>
             </div>
             <!-- Quick Actions -->

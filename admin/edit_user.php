@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
     $role = $_POST['role'];
-    $new_password = trim($_POST['new_password']);
     
     // Validate inputs
     if (empty($username) || empty($email) || empty($role)) {
@@ -56,23 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($check_stmt->num_rows > 0) {
                 $error = 'Email already exists for another user';
             } else {
-                // Update user data
-                if (!empty($new_password)) {
-                    // Update with new password
-                    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                    $update_stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, phone = ?, pwd = ?, role = ? WHERE user_id = ?");
-                    if ($update_stmt) {
-                        $update_stmt->bind_param("sssssi", $username, $email, $phone, $hashed_password, $role, $user_id);
-                    }
-                } else {
-                    // Update without changing password
-                    $update_stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, phone = ?, role = ? WHERE user_id = ?");
-                    if ($update_stmt) {
-                        $update_stmt->bind_param("ssssi", $username, $email, $phone, $role, $user_id);
-                    }
-                }
-                
-                if (isset($update_stmt)) {
+                // Update user data (without password)
+                $update_stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, phone = ?, role = ? WHERE user_id = ?");
+                if ($update_stmt) {
+                    $update_stmt->bind_param("ssssi", $username, $email, $phone, $role, $user_id);
+                    
                     if ($update_stmt->execute()) {
                         $success = 'User updated successfully!';
                         // Refresh user data
@@ -120,24 +107,22 @@ if (!$user && $user_id > 0) {
     <div class="admin-flex">
         <!-- Sidebar -->
         <div class="admin-sidebar">
-            <div class="admin-sidebar-header">
-                <h4>Admin Panel</h4>
-                <hr>
-                <div class="admin-profile">
-                    <i class="fas fa-user-circle fa-3x"></i>
-                    <div>
-                        <h6><?php echo htmlspecialchars($_SESSION['username']); ?></h6>
-                        <small><?php echo htmlspecialchars($_SESSION['email']); ?></small>
-                    </div>
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <img src="../image/c2.jpg" alt="Admin Profile" class="admin-profile-pic">
                 </div>
+                <h5><?php echo htmlspecialchars($_SESSION['username']); ?></h5>
+                <small><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+                <div class="mt-2 admin-badge">Administrator</div>
             </div>
             <ul class="admin-nav">
-                <li><a class="admin-nav-link" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                <li><a class="admin-nav-link active" href="users.php"><i class="fas fa-users me-2"></i>Manage Users</a></li>
-                <li><a class="admin-nav-link" href="therapists.php"><i class="fas fa-user-md me-2"></i>Therapists</a></li>
-                <li><a class="admin-nav-link" href="services.php"><i class="fas fa-concierge-bell me-2"></i>Services</a></li>
-                <li><a class="admin-nav-link" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                <li class="mt-3"><a class="admin-nav-link text-danger" href="../logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                <li><a class="admin-nav-link" href="dashboard.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a class="admin-nav-link active" href="users.php"><i class="fas fa-users"></i>Manage Users</a></li>
+                <li><a class="admin-nav-link" href="therapists.php"><i class="fas fa-user-md"></i>Therapists</a></li>
+                <li><a class="admin-nav-link" href="services.php"><i class="fas fa-concierge-bell"></i>Services</a></li>
+                <li><a class="admin-nav-link" href="appointments.php"><i class="fas fa-calendar-check"></i>Appointments</a></li>
+                <li><a class="admin-nav-link" href="messages.php"><i class="fas fa-envelope"></i>Messages</a></li>
+                <li class="mt-3"><a class="admin-nav-link text-danger" href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
             </ul>
         </div>
         <!-- Main Content -->
@@ -182,10 +167,6 @@ if (!$user && $user_id > 0) {
                                 <option value="therapist" <?php echo $user['role'] === 'therapist' ? 'selected' : ''; ?>>Therapist</option>
                                 <option value="client" <?php echo $user['role'] === 'client' ? 'selected' : ''; ?>>Client</option>
                             </select>
-                        </div>
-                        <div style="margin-bottom:18px;">
-                            <label for="new_password" style="display:block;font-weight:500;margin-bottom:6px;">New Password <span style="color:#888;font-weight:400;">(leave blank to keep current)</span></label>
-                            <input type="password" id="new_password" name="new_password" style="width:100%;padding:10px 12px;border-radius:6px;border:1px solid #ccc;">
                         </div>
                         <div style="margin-top:24px;">
                             <button type="submit" class="admin-btn admin-btn-primary" style="width:100%;max-width:220px;">

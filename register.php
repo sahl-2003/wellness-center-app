@@ -13,7 +13,11 @@ if (isset($_POST['register'])) {
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm']);
     $user_type = 'client';
-    if ($password !== $confirm_password) {
+    
+    // Validate password length
+    if (strlen($password) < 6) {
+        $error = "Password must be at least 6 characters long!";
+    } elseif ($password !== $confirm_password) {
         $error = "Passwords do not match!";
     } else {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -69,11 +73,12 @@ $conn->close();
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required placeholder="Password" />
+                        <input type="password" id="password" name="password" required placeholder="Password (min 6 characters)" minlength="6" />
+                        <small style="color: #888; font-size: 0.8rem; margin-top: 4px; display: block;">Password must be at least 6 characters long</small>
                     </div>
                     <div class="form-group">
                         <label for="confirm">Confirm Password</label>
-                        <input type="password" id="confirm" name="confirm" required placeholder="Confirm password" />
+                        <input type="password" id="confirm" name="confirm" required placeholder="Confirm password" minlength="6" />
                     </div>
                     <button type="submit" name="register" class="btn">Register</button>
                 </form>
@@ -90,6 +95,59 @@ $conn->close();
             </div>
         </div>
     </main>
+    
+    <script>
+        // Password validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('confirm');
+            const submitButton = document.querySelector('button[type="submit"]');
+            
+            function validatePassword() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmInput.value;
+                
+                // Check password length
+                if (password.length > 0 && password.length < 6) {
+                    passwordInput.style.borderColor = '#e74c3c';
+                    passwordInput.nextElementSibling.style.color = '#e74c3c';
+                    passwordInput.nextElementSibling.textContent = 'Password must be at least 6 characters long';
+                    return false;
+                } else if (password.length >= 6) {
+                    passwordInput.style.borderColor = '#27ae60';
+                    passwordInput.nextElementSibling.style.color = '#27ae60';
+                    passwordInput.nextElementSibling.textContent = 'Password is valid ✓';
+                } else {
+                    passwordInput.style.borderColor = '';
+                    passwordInput.nextElementSibling.style.color = '#888';
+                    passwordInput.nextElementSibling.textContent = 'Password must be at least 6 characters long';
+                }
+                
+                // Check if passwords match
+                if (confirmPassword.length > 0 && password !== confirmPassword) {
+                    confirmInput.style.borderColor = '#e74c3c';
+                    return false;
+                } else if (confirmPassword.length > 0 && password === confirmPassword) {
+                    confirmInput.style.borderColor = '#27ae60';
+                } else {
+                    confirmInput.style.borderColor = '';
+                }
+                
+                return password.length >= 6 && password === confirmPassword;
+            }
+            
+            passwordInput.addEventListener('input', validatePassword);
+            confirmInput.addEventListener('input', validatePassword);
+            
+            // Form submission validation
+            document.querySelector('.auth-form').addEventListener('submit', function(e) {
+                if (!validatePassword()) {
+                    e.preventDefault();
+                    alert('Please ensure your password is at least 6 characters long and both passwords match.');
+                }
+            });
+        });
+    </script>
     <footer>
         <div class="container">
             <div class="footer-content">

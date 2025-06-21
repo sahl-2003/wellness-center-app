@@ -21,6 +21,21 @@ $conn->close();
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .service-details-more {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .service-description.truncated {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            -webkit-box-orient: vertical;
+        }
+    </style>
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -38,7 +53,7 @@ $conn->close();
         <div class="container">
             <div class="category-tabs">
                 <button class="category-tab active" data-category="all">All Services</button>
-                <button class="category-tab" data-category="ayurveda">Ayurveda</button>
+                <button class="category-tab" data-category="ayurvedic">Ayurveda</button>
                 <button class="category-tab" data-category="yoga">Yoga & Meditation</button>
                 <button class="category-tab" data-category="therapy">Therapies</button>
                 <button class="category-tab" data-category="nutrition">Nutrition</button>
@@ -69,9 +84,12 @@ $conn->close();
                         <h2><?php echo htmlspecialchars($service['name']); ?></h2>
                         <div class="service-meta">
                             <span><i class="fas fa-clock"></i> <?php echo htmlspecialchars($service['duration']); ?> mins</span>
-                            <span><i class="fas fa-rupee-sign"></i> From ₹<?php echo number_format($service['price'], 2); ?></span>
+                            <span><i class="fas fa-tag"></i> From RS <?php echo number_format($service['price'], 2); ?></span>
                         </div>
-                        <p class="service-description"><?php echo htmlspecialchars($service['description']); ?></p>
+                        <p class="service-description truncated"><?php echo htmlspecialchars($service['description']); ?></p>
+                        <div class="service-details-more" id="details-<?php echo $service['service_id']; ?>">
+                             <p><?php echo nl2br(htmlspecialchars($service['description'])); ?></p>
+                        </div>
                         <?php if (!empty($service['features'])): ?>
                         <ul class="service-features">
                             <?php foreach (explode("|", $service['features']) as $feature): ?>
@@ -79,10 +97,10 @@ $conn->close();
                             <?php endforeach; ?>
                         </ul>
                         <?php endif; ?>
-                        <div class="service-price">Starting at ₹<?php echo number_format($service['price'], 2); ?></div>
+                        <div class="service-price">Starting at RS <?php echo number_format($service['price'], 2); ?></div>
                         <div class="service-actions">
                             <a href="<?php echo isset($_SESSION['user_id']) ? 'book_appointment.php' : 'login.php'; ?>" class="btn btn-primary">Book Now</a>
-                            <a href="<?php echo !empty($service['details_link']) ? htmlspecialchars($service['details_link']) : '#'; ?>" class="btn btn-outline">Learn More</a>
+                            <a href="#" class="read-more" data-service="<?php echo $service['service_id']; ?>">Learn More <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -118,8 +136,7 @@ $conn->close();
                         <li><a href="index.php">Home</a></li>
                         <li><a href="services.php">Services</a></li>
                         <li><a href="about.php">About Us</a></li>
-                        <li><a href="book_appointment.php">Book Appointment</a></li>
-                    </ul>
+                       </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Contact Us</h3>
@@ -140,28 +157,105 @@ $conn->close();
         </div>
     </footer>
     <script>
-    // Service category filtering
+    // Constants for DOM elements
     const categoryTabs = document.querySelectorAll('.category-tab');
     const serviceCards = document.querySelectorAll('.service-card');
+    const searchInput = document.getElementById('service-search');
+    const searchButton = document.getElementById('search-button');
+    const servicesContainer = document.getElementById('services-container');
+    const resultsCount = document.getElementById('results-count');
 
+    /**
+     * Filters and searches services based on the active category and search term.
+     */
+    function filterAndDisplayServices() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const activeCategory = document.querySelector('.category-tab.active').dataset.category;
+        let visibleCount = 0;
+
+        serviceCards.forEach(card => {
+            const cardCategory = card.dataset.category.toLowerCase();
+            const cardSearchData = card.dataset.search.toLowerCase();
+
+            // Category match: checks if the card's category string includes the active category keyword.
+            const categoryMatch = (activeCategory === 'all' || cardCategory.includes(activeCategory));
+            
+            // Search match: checks if the card's search data includes the search term.
+            const searchMatch = cardSearchData.includes(searchTerm);
+
+            if (categoryMatch && searchMatch) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        updateResultsCount(visibleCount);
+    }
+
+    /**
+     * Updates the text indicating how many results are showing.
+     * @param {number} count - The number of visible service cards.
+     */
+    function updateResultsCount(count) {
+        const totalServices = serviceCards.length;
+        const searchTerm = searchInput.value;
+
+        const noResults = servicesContainer.querySelector('.no-results');
+        if (count === 0) {
+            resultsCount.textContent = `No services found matching your criteria.`;
+            if (!noResults) {
+                const noResultsDiv = document.createElement('div');
+                noResultsDiv.className = 'no-results';
+                noResultsDiv.textContent = 'No services found.';
+                servicesContainer.appendChild(noResultsDiv);
+            }
+        } else {
+            if (noResults) {
+                noResults.remove();
+            }
+            if (searchTerm) {
+                resultsCount.textContent = `Showing ${count} of ${totalServices} services matching "${searchTerm}".`;
+            } else {
+                resultsCount.textContent = `Showing ${count} of ${totalServices} services.`;
+            }
+        }
+    }
+
+    // Add event listeners
     categoryTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            // Update active tab
             categoryTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
+            filterAndDisplayServices();
+        });
+    });
 
-            // Filter services
-            const category = tab.dataset.category;
-            serviceCards.forEach(card => {
-                const cardCategories = card.dataset.category.split(' ');
-                if (category === 'all' || cardCategories.includes(category)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            // Update search results count after category filter
-            updateSearchResultsCount();
+    searchInput.addEventListener('input', filterAndDisplayServices);
+    searchButton.addEventListener('click', filterAndDisplayServices);
+    
+    // Initial filter on page load
+    filterAndDisplayServices();
+
+    // Learn More functionality
+    document.querySelectorAll('.read-more').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const serviceId = this.getAttribute('data-service');
+            const detailsDiv = document.getElementById('details-' + serviceId);
+            const card = this.closest('.service-card');
+            const description = card.querySelector('.service-description');
+            
+            if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+                detailsDiv.style.display = 'block';
+                description.style.display = 'none';
+                this.innerHTML = 'Show Less <i class="fas fa-arrow-up"></i>';
+            } else {
+                detailsDiv.style.display = 'none';
+                description.style.display = 'block';
+                this.innerHTML = 'Learn More <i class="fas fa-arrow-right"></i>';
+            }
         });
     });
 
@@ -171,63 +265,6 @@ $conn->close();
             document.querySelector('.nav-links').classList.toggle('active');
         });
     }
-    // Search Functionality
-    const searchInput = document.getElementById('service-search');
-    const searchButton = document.getElementById('search-button');
-    const servicesContainer = document.getElementById('services-container');
-    const resultsCount = document.getElementById('results-count');
-
-    function filterServices() {
-        const searchTerm = searchInput.value.toLowerCase();
-        let visibleCount = 0;
-
-        document.querySelectorAll('.service-card').forEach(card => {
-            const searchData = card.getAttribute('data-search').toLowerCase();
-            const isVisible = searchData.includes(searchTerm) &&
-                (card.style.display !== 'none' || searchTerm.length === 0);
-
-            if (isVisible) {
-                card.style.display = 'flex';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        updateSearchResultsCount(visibleCount);
-    }
-
-    function updateSearchResultsCount(count) {
-        const totalServices = document.querySelectorAll('.service-card').length;
-        const visibleServices = count !== undefined ? count :
-            document.querySelectorAll('.service-card[style="display: flex;"]').length;
-
-        if (searchInput.value.length > 0) {
-            resultsCount.textContent = `Showing ${visibleServices} of ${totalServices} services matching "${searchInput.value}"`;
-        } else {
-            resultsCount.textContent = `Showing all ${totalServices} services`;
-        }
-
-        // Show no results message if needed
-        const noResults = document.querySelector('.no-results');
-        if (visibleServices === 0) {
-            if (!noResults) {
-                const noResultsDiv = document.createElement('div');
-                noResultsDiv.className = 'no-results';
-                noResultsDiv.textContent = 'No services found matching your search.';
-                servicesContainer.appendChild(noResultsDiv);
-            }
-        } else if (noResults) {
-            noResults.remove();
-        }
-    }
-
-    // Event listeners for search
-    searchInput.addEventListener('input', filterServices);
-    searchButton.addEventListener('click', filterServices);
-
-    // Initialize results count
-    updateSearchResultsCount();
     </script>
     <script src="auth_check.js"></script>
 </body>

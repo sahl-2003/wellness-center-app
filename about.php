@@ -131,7 +131,7 @@ $conn->close();
                 <!-- Integrative Therapies -->
                 <div class="practice-card">
                     <div class="practice-icon">
-                        <i class="fas fa-hands-heart"></i>
+                        <i class="fas fa-sync-alt"></i>
                     </div>
                     <h3>Integrative Therapies</h3>
                     <p>Blending Eastern and Western modalities like acupuncture, cupping, and physiotherapy for targeted healing.</p>

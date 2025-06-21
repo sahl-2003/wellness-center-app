@@ -31,14 +31,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
                 
             case 'decline':
-                $stmt = $conn->prepare("UPDATE appointments SET status = 'declined' WHERE id = ? AND therapist_id = ?");
+                // First check if the appointment exists and belongs to this therapist
+                $check_stmt = $conn->prepare("SELECT id, status FROM appointments WHERE id = ? AND therapist_id = ?");
+                $check_stmt->bind_param("ii", $appointment_id, $_SESSION['user_id']);
+                $check_stmt->execute();
+                $check_result = $check_stmt->get_result();
+                $appointment = $check_result->fetch_assoc();
+                $check_stmt->close();
+                
+                if ($appointment) {
+                    // Update the appointment status
+                    $stmt = $conn->prepare("UPDATE appointments SET status = 'cancelled' WHERE id = ? AND therapist_id = ?");
                 $stmt->bind_param("ii", $appointment_id, $_SESSION['user_id']);
                 if ($stmt->execute()) {
-                    $success = 'Appointment declined successfully!';
+                        $affected_rows = $stmt->affected_rows;
+                        if ($affected_rows > 0) {
+                            $success = 'Appointment cancelled successfully!';
+                        } else {
+                            $error = 'No changes made. Appointment may already be cancelled.';
+                        }
+                    } else {
+                        $error = 'Error cancelling appointment: ' . $conn->error;
+                    }
+                    $stmt->close();
                 } else {
-                    $error = 'Error declining appointment: ' . $conn->error;
+                    $error = 'Appointment not found or you do not have permission to cancel it.';
                 }
-                $stmt->close();
                 break;
                 
             case 'reschedule':
@@ -109,27 +127,25 @@ $conn->close();
         <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
         <div class="therapist-sidebar-custom">
             <div class="text-center mb-4">
-                <div class="profile-image-container mb-3">
+                <div class="mb-3">
                 <?php if (!empty($therapist['profile_picture'])): ?>
                         <img src="../<?php echo htmlspecialchars($therapist['profile_picture']); ?>" class="profile-picture" alt="Profile Picture">
                 <?php else: ?>
-                        <img src="../assets/images/default-profile.jpg" class="profile-picture" alt="Profile Picture">
+                        <img src="../image/t1.jpg" class="profile-picture" alt="Profile Picture">
                     <?php endif; ?>
                     </div>
                 <h5><?php echo htmlspecialchars($therapist['username'] ?? $_SESSION['username']); ?></h5>
                 <small><?php echo htmlspecialchars($therapist['email'] ?? $_SESSION['email']); ?></small>
-                <?php if (!empty($therapist['specialization'])): ?>
-                    <div class="mt-2 card-badge-therapist card-badge-primary"><?php echo htmlspecialchars($therapist['specialization']); ?></div>
-                <?php endif; ?>
+                <div class="mt-2 therapist-badge">Therapist</div>
             </div>
             <ul class="sidebar-nav">
-                <li><a class="sidebar-link <?php if($current_page == 'dashboard.php') echo 'active'; ?>" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                <li><a class="sidebar-link <?php if($current_page == 'profile.php') echo 'active'; ?>" href="profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
-                <li><a class="sidebar-link <?php if($current_page == 'clients.php') echo 'active'; ?>" href="clients.php"><i class="fas fa-users me-2"></i>My Clients</a></li>
-                <li><a class="sidebar-link <?php if($current_page == 'appointments.php') echo 'active'; ?>" href="appointments.php"><i class="fas fa-calendar-check me-2"></i>Appointments</a></li>
-                <li><a class="sidebar-link <?php if($current_page == 'schedule.php') echo 'active'; ?>" href="schedule.php"><i class="fas fa-calendar-alt me-2"></i>Schedule</a></li>
-                <li class="position-relative"><a class="sidebar-link <?php if($current_page == 'messages.php') echo 'active'; ?>" href="messages.php"><i class="fas fa-envelope me-2"></i>Messages<?php if (isset($unread_count) && $unread_count > 0): ?><span class="sidebar-badge"><?php echo $unread_count; ?></span><?php endif; ?></a></li>
-                <li class="mt-3"><a class="sidebar-link text-danger" href="../logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                <li><a class="sidebar-link <?php if($current_page == 'dashboard.php') echo 'active'; ?>" href="dashboard.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a class="sidebar-link <?php if($current_page == 'profile.php') echo 'active'; ?>" href="profile.php"><i class="fas fa-user"></i>My Profile</a></li>
+                <li><a class="sidebar-link <?php if($current_page == 'clients.php') echo 'active'; ?>" href="clients.php"><i class="fas fa-users"></i>My Clients</a></li>
+                <li><a class="sidebar-link <?php if($current_page == 'appointments.php') echo 'active'; ?>" href="appointments.php"><i class="fas fa-calendar-check"></i>Appointments</a></li>
+                <li><a class="sidebar-link <?php if($current_page == 'schedule.php') echo 'active'; ?>" href="schedule.php"><i class="fas fa-calendar-alt"></i>Schedule</a></li>
+                <li><a class="sidebar-link <?php if($current_page == 'messages.php') echo 'active'; ?>" href="messages.php"><i class="fas fa-envelope"></i>Messages<?php if (isset($unread_count) && $unread_count > 0): ?><span class="sidebar-badge"><?php echo $unread_count; ?></span><?php endif; ?></a></li>
+                <li class="mt-3"><a class="sidebar-link text-danger" href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
             </ul>
         </div>
         <!-- Main Content -->
@@ -143,6 +159,7 @@ $conn->close();
             <?php if ($success): ?>
                 <div class="alert-therapist alert-info-therapist"><?php echo htmlspecialchars($success); ?></div>
             <?php endif; ?>
+            
             <div class="dashboard-stats-grid" style="flex-wrap: wrap; gap: 24px;">
                     <?php if (empty($appointments)): ?>
                     <div class="card-therapist" style="width:100%;"><div class="card-body-therapist text-center">No appointments found</div></div>
@@ -181,7 +198,7 @@ $conn->close();
                                 <span class="card-badge-therapist <?php 
                                     echo $appointment['status'] === 'pending' ? 'card-badge-warning' : 
                                          ($appointment['status'] === 'confirmed' ? 'card-badge-success' : 
-                                         ($appointment['status'] === 'declined' ? 'card-badge-danger' : 'card-badge-info')); 
+                                         ($appointment['status'] === 'cancelled' ? 'card-badge-danger' : 'card-badge-info')); 
                                 ?>">
                                                     <?php echo htmlspecialchars(ucfirst($appointment['status'])); ?>
                                                 </span>
@@ -195,15 +212,13 @@ $conn->close();
                                         </div>
                             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
                                 <?php if ($appointment['status'] === 'cancelled'): ?>
-                                    <!-- No action buttons if cancelled -->
-                                <?php elseif ($appointment['status'] === 'declined'): ?>
                                     <button class="btn-therapist btn-therapist-danger" disabled>
-                                        <i class="fas fa-times me-1"></i> Declined
+                                        <i class="fas fa-times me-1"></i> Cancelled
                                     </button>
                                     <button class="btn-therapist btn-therapist-success" disabled><i class="fas fa-check me-1"></i> Confirm</button>
                                     <button class="btn-therapist btn-therapist-info" disabled><i class="fas fa-clock me-1"></i> Reschedule</button>
                                     <button class="btn-therapist btn-therapist-info" disabled><i class="fas fa-eye me-1"></i> Details</button>
-                                <?php elseif (!in_array($appointment['status'], ['confirmed', 'declined', 'completed'])): ?>
+                                <?php elseif (!in_array($appointment['status'], ['confirmed', 'cancelled', 'completed'])): ?>
                                     <form method="post" style="display:inline;">
                                                     <input type="hidden" name="appointment_id" value="<?php echo $appointment['id']; ?>">
                                                     <input type="hidden" name="action" value="accept">
@@ -215,7 +230,7 @@ $conn->close();
                                         <input type="hidden" name="appointment_id" value="<?php echo $appointment['id']; ?>">
                                         <input type="hidden" name="action" value="decline">
                                         <button type="submit" class="btn-therapist btn-therapist-danger">
-                                                    <i class="fas fa-times me-1"></i> Decline
+                                            <i class="fas fa-times me-1"></i> Cancel
                                                 </button>
                                     </form>
                                     <button class="btn-therapist btn-therapist-info reschedule-btn" 

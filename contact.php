@@ -1,4 +1,35 @@
-<?php session_start(); ?>
+<?php
+session_start();
+include('dbconnect.php');
+
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $phone = trim($_POST['phone']);
+    $subject = trim($_POST['subject']);
+    $message = trim($_POST['message']);
+
+    if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+        $error = 'Please fill in all required fields.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Invalid email format.';
+    } else {
+        $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $name, $email, $phone, $subject, $message);
+        
+        if ($stmt->execute()) {
+            $success = 'Thank you for your message! We will get back to you shortly.';
+        } else {
+            $error = 'Sorry, there was an error sending your message. Please try again later.';
+        }
+        $stmt->close();
+    }
+    $conn->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +40,6 @@
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -35,7 +65,6 @@
                         <div class="info-content">
                             <h3>Our Location</h3>
                             <p>123 Wellness Street<br>Colombo 05, Sri Lanka</p>
-                            <a href="#map" class="map-link">View on map <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                     <div class="info-card">
@@ -75,7 +104,13 @@
                         <h2>Send Us a Message</h2>
                         <p>Fill out the form below and we'll get back to you within 24 hours</p>
                     </div>
-                    <form class="contact-form">
+                    <?php if ($success): ?>
+                        <div class="alert-custom alert-info-custom" style="margin-bottom: 20px;"><?php echo $success; ?></div>
+                    <?php endif; ?>
+                    <?php if ($error): ?>
+                        <div class="alert-custom alert-danger-custom" style="margin-bottom: 20px;"><?php echo $error; ?></div>
+                    <?php endif; ?>
+                    <form class="contact-form" method="POST" action="contact.php">
                         <div class="form-group">
                             <label for="name">Full Name *</label>
                             <input type="text" id="name" name="name" placeholder="fullname" required>
@@ -86,8 +121,8 @@
                                 <input type="email" id="email" name="email" placeholder="Email" required>
                             </div>
                             <div class="form-group">
-                                <label for="phone">Phone Number *</label>
-                                <input type="tel" id="phone" name="phone" placeholder="+94 xxxx xxxx" required>
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" placeholder="+94 xxxx xxxx">
                             </div>
                         </div>
                         <div class="form-group">
@@ -128,16 +163,6 @@
                         </div>
                     </div>
                     <!-- More FAQ items would go here -->
-                </div>
-            </section>
-            <!-- Map Section -->
-            <section class="map-section" id="map">
-                <h2>Find Us on the Map</h2>
-                <div class="map-container" id="mapContainer"></div>
-                <div class="map-actions">
-                    <a href="https://maps.google.com" class="btn btn-outline" target="_blank">
-                        <i class="fas fa-directions"></i> Get Directions
-                    </a>
                 </div>
             </section>
         </div>
@@ -195,17 +220,35 @@
             </div>
         </div>
     </footer>
-    <!-- JavaScript Libraries -->
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <!-- FAQ JavaScript -->
     <script>
-        // Initialize map
-        const map = L.map('mapContainer').setView([6.9271, 79.8612], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-        L.marker([6.9271, 79.8612]).addTo(map)
-            .bindPopup('GreenLife Wellness Center<br>123 Wellness Street, Colombo')
-            .openPopup();
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const faqItem = this.parentElement;
+                    const answer = this.nextElementSibling;
+                    
+                    // Close all other FAQ items
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        if (item !== faqItem) {
+                            item.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current FAQ item
+                    faqItem.classList.toggle('active');
+                    
+                    // Smooth animation for answer
+                    if (faqItem.classList.contains('active')) {
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                    } else {
+                        answer.style.maxHeight = '0';
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html> 

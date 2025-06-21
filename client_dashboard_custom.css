@@ -12,8 +12,8 @@
     box-shadow: 2px 0 8px rgba(0,0,0,0.04);
 }
 .dashboard-sidebar-custom .profile-picture {
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #fff;
@@ -36,6 +36,7 @@
     border-radius: 6px;
     transition: background 0.2s;
     font-size: 1rem;
+    position: relative;
 }
 .dashboard-sidebar-custom .sidebar-link.active,
 .dashboard-sidebar-custom .sidebar-link:hover {
@@ -43,12 +44,18 @@
     color: #fff;
 }
 .dashboard-sidebar-custom .sidebar-link .sidebar-badge {
+    position: absolute;
+    top: 8px;
+    right: 14px;
     background: #e74c3c;
     color: #fff;
     border-radius: 10px;
-    font-size: 0.8rem;
-    padding: 2px 8px;
-    margin-left: 8px;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    min-width: 16px;
+    text-align: center;
+    font-weight: bold;
+    z-index: 10;
 }
 
 .dashboard-main {
@@ -299,24 +306,482 @@
     margin-right: 10px;
 }
 
-/* Ensure sidebar-badge positioning doesn't break in nested elements */
-.sidebar-badge {
-    position: absolute;
-    top: 8px;
-    right: 14px;
-    padding: 2px 6px;
-    font-size: 0.7rem;
-    border-radius: 10px;
-    background-color: #e74c3c;
-    color: #fff;
-}
-
-
 /* Text color utilities */
 
 /* Responsive helper for dashboard cards layout */
 @media (max-width: 768px) {
     .card-custom.appointment-card {
         flex: 1 1 100%;
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+    .client-sidebar {
+        width: 280px;
+    }
+    
+    .client-main {
+        padding: 40px 40px 40px 40px;
+    }
+    
+    .client-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Desktop (1200px to 1399px) */
+@media (max-width: 1399px) {
+    .client-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+/* Tablet Large (992px to 1199px) */
+@media (max-width: 1199px) {
+    .client-sidebar {
+        width: 220px;
+        padding: 24px 15px 15px 15px;
+    }
+    
+    .client-main {
+        padding: 24px 20px 20px 20px;
+    }
+    
+    .client-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .client-card {
+        padding: 20px;
+    }
+    
+    .client-profile-pic {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .client-sidebar h5 {
+        font-size: 1rem;
+    }
+    
+    .client-sidebar small {
+        font-size: 0.8rem;
+    }
+    
+    .client-nav-link {
+        padding: 10px 15px;
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+}
+
+/* Tablet (768px to 991px) */
+@media (max-width: 991px) {
+    .client-flex {
+        flex-direction: column;
+    }
+    
+    .client-sidebar {
+        width: 100%;
+        min-height: auto;
+        padding: 20px;
+        order: 2;
+    }
+    
+    .client-main {
+        order: 1;
+        padding: 20px;
+        margin-bottom: 0;
+    }
+    
+    .client-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .client-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .client-toolbar {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .client-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .client-card {
+        padding: 18px;
+    }
+    
+    .client-profile-pic {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .client-sidebar h5 {
+        font-size: 0.9rem;
+    }
+    
+    .client-sidebar small {
+        font-size: 0.75rem;
+    }
+    
+    .client-nav-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        margin-bottom: 3px;
+    }
+    
+    .client-actions-flex {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .client-actions-flex > .client-card {
+        flex: none;
+        width: 100%;
+    }
+}
+
+/* Mobile Large (576px to 767px) */
+@media (max-width: 767px) {
+    .client-sidebar {
+        padding: 15px;
+    }
+    
+    .client-profile-pic {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .client-sidebar h5 {
+        font-size: 0.9rem;
+    }
+    
+    .client-sidebar small {
+        font-size: 0.7rem;
+    }
+    
+    .client-badge {
+        font-size: 0.8rem;
+        padding: 1px 8px;
+    }
+    
+    .client-nav-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        margin-bottom: 3px;
+    }
+    
+    .client-nav-link i {
+        margin-right: 8px;
+    }
+    
+    .client-main {
+        padding: 15px;
+    }
+    
+    .client-header {
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+    }
+    
+    .client-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .client-toolbar {
+        gap: 8px;
+    }
+    
+    .client-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .client-card {
+        padding: 15px;
+    }
+    
+    .client-card-header {
+        padding: 12px 15px;
+        font-size: 1rem;
+    }
+    
+    .client-card-body {
+        padding: 12px 15px;
+    }
+    
+    .client-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .client-form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .client-form-group {
+        width: 100%;
+    }
+    
+    .client-profile-form-flex {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .client-profile-form-image-col {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .client-profile-form-fields-col {
+        width: 100%;
+    }
+}
+
+/* Mobile Small (up to 575px) */
+@media (max-width: 575px) {
+    .client-sidebar {
+        padding: 12px;
+    }
+    
+    .client-profile-pic {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .client-sidebar h5 {
+        font-size: 0.85rem;
+    }
+    
+    .client-sidebar small {
+        font-size: 0.65rem;
+    }
+    
+    .client-badge {
+        font-size: 0.75rem;
+        padding: 1px 6px;
+    }
+    
+    .client-nav-link {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        margin-bottom: 2px;
+    }
+    
+    .client-main {
+        padding: 12px;
+    }
+    
+    .client-header {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+    }
+    
+    .client-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .client-toolbar {
+        gap: 6px;
+    }
+    
+    .client-stats-grid {
+        gap: 12px;
+    }
+    
+    .client-card {
+        padding: 12px;
+    }
+    
+    .client-card-header {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .client-card-body {
+        padding: 10px 12px;
+    }
+    
+    .client-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .client-btn-sm {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .client-alert {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .client-table {
+        font-size: 0.85rem;
+    }
+    
+    .client-table th,
+    .client-table td {
+        padding: 8px 6px;
+    }
+}
+
+/* Extra Small Mobile (up to 375px) */
+@media (max-width: 375px) {
+    .client-sidebar {
+        padding: 10px;
+    }
+    
+    .client-profile-pic {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .client-sidebar h5 {
+        font-size: 0.8rem;
+    }
+    
+    .client-sidebar small {
+        font-size: 0.6rem;
+    }
+    
+    .client-nav-link {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .client-main {
+        padding: 10px;
+    }
+    
+    .client-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .client-card {
+        padding: 10px;
+    }
+    
+    .client-card-header,
+    .client-card-body {
+        padding: 8px 10px;
+    }
+    
+    .client-btn {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .client-btn-sm {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+    }
+    
+    .client-table {
+        font-size: 0.8rem;
+    }
+    
+    .client-table th,
+    .client-table td {
+        padding: 6px 4px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .client-sidebar {
+        padding: 10px;
+    }
+    
+    .client-profile-pic {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .client-sidebar h5 {
+        font-size: 0.75rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .client-sidebar small {
+        font-size: 0.6rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .client-nav-link {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        margin-bottom: 2px;
+    }
+    
+    .client-main {
+        padding: 10px;
+    }
+    
+    .client-header {
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+    }
+    
+    .client-header h1 {
+        font-size: 1.1rem;
+    }
+    
+    .client-stats-grid {
+        gap: 10px;
+    }
+    
+    .client-card {
+        padding: 10px;
+    }
+    
+    .client-card-header {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+    
+    .client-card-body {
+        padding: 8px 10px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .client-sidebar {
+        display: none;
+    }
+    
+    .client-main {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .client-header {
+        border-bottom: 1px solid #000;
+    }
+    
+    .client-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .client-btn {
+        display: none;
+    }
+    
+    .client-toolbar {
+        display: none;
     }
 }

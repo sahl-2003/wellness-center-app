@@ -92,24 +92,22 @@ $conn->close();
     <div class="admin-flex">
         <!-- Sidebar -->
         <div class="admin-sidebar">
-            <div class="admin-sidebar-header">
-                <h4>Admin Panel</h4>
-                <hr>
-                <div class="admin-profile">
-                    <i class="fas fa-user-circle fa-3x"></i>
-                    <div>
-                        <h6><?php echo htmlspecialchars($_SESSION['username']); ?></h6>
-                        <small><?php echo htmlspecialchars($_SESSION['email']); ?></small>
-                    </div>
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <img src="../image/c2.jpg" alt="Admin Profile" class="admin-profile-pic">
                 </div>
+                <h5><?php echo htmlspecialchars($_SESSION['username']); ?></h5>
+                <small><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+                <div class="mt-2 admin-badge">Administrator</div>
             </div>
             <ul class="admin-nav">
-                <li><a class="admin-nav-link" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                <li><a class="admin-nav-link" href="users.php"><i class="fas fa-users me-2"></i>Manage Users</a></li>
-                <li><a class="admin-nav-link" href="therapists.php"><i class="fas fa-user-md me-2"></i>Therapists</a></li>
-                <li><a class="admin-nav-link active" href="services.php"><i class="fas fa-concierge-bell me-2"></i>Services</a></li>
-                <li><a class="admin-nav-link" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                <li class="mt-3"><a class="admin-nav-link text-danger" href="../logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                <li><a class="admin-nav-link" href="dashboard.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a class="admin-nav-link" href="users.php"><i class="fas fa-users"></i>Manage Users</a></li>
+                <li><a class="admin-nav-link" href="therapists.php"><i class="fas fa-user-md"></i>Therapists</a></li>
+                <li><a class="admin-nav-link active" href="services.php"><i class="fas fa-concierge-bell"></i>Services</a></li>
+                <li><a class="admin-nav-link" href="appointments.php"><i class="fas fa-calendar-check"></i>Appointments</a></li>
+                <li><a class="admin-nav-link" href="messages.php"><i class="fas fa-envelope"></i>Messages</a></li>
+                <li class="mt-3"><a class="admin-nav-link text-danger" href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
             </ul>
         </div>
         <!-- Main Content -->
