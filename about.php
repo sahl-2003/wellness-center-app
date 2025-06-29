@@ -1,8 +1,8 @@
 <?php
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) session_start();
-include('../dbconnect.php');
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+include('dbconnect.php');
+
 if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
