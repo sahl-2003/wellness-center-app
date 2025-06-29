@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'client') {
-    header("Location: login.html");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -64,7 +64,7 @@ if ($result) {
 
 // Get all services
 $services = [];
-$sql = "SELECT service_id, name, duration, price FROM services WHERE is_active = 1 ORDER BY name";
+$sql = "SELECT service_id, name, duration, price, image_path FROM services WHERE is_active = 1 ORDER BY name";
 $result = $conn->query($sql);
 if ($result) {
     while ($row = $result->fetch_assoc()) {
@@ -326,7 +326,11 @@ $conn->close();
                                     ?>>
                                     <label for="service_<?php echo $service['service_id']; ?>">
                                         <div class="service-icon">
-                                            <i class="fas fa-spa"></i>
+                                            <?php if (!empty($service['image_path'])): ?>
+                                                <img src="<?php echo htmlspecialchars($service['image_path']); ?>" alt="<?php echo htmlspecialchars($service['name']); ?>">
+                                            <?php else: ?>
+                                                <i class="fas fa-spa"></i>
+                                            <?php endif; ?>
                                         </div>
                                         <div class="service-info">
                                             <h3><?php echo htmlspecialchars($service['name']); ?></h3>

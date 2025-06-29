@@ -3,17 +3,14 @@ session_start();
 
 // Check if user is logged in and is a client
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'client') {
-    header("Location: login.html");
+    header("Location: login.php");
     exit();
 }
 
-// Database connection
-$db_host = "localhost";
-$db_user = "root"; // Default XAMPP username
-$db_pass = "";     // Default XAMPP password
-$db_name = "greenlife"; // Your database name
+include('dbconnect.php');
 
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+
+
 
 // Check connection
 if ($conn->connect_error) {
@@ -166,7 +163,7 @@ $conn->close();
                         <?php endif; ?>
                     </a>
                 </li>
-                <li class="mt-3">
+                <li class="spacing-top">
                     <a class="sidebar-link text-primary" href="index.php"><i class="fas fa-arrow-left me-2"></i>Go Back</a>
                 </li>
             </ul>
@@ -244,7 +241,7 @@ $conn->close();
                                                 </form>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="appointment-details mt-3" id="details-<?php echo $appointment['appointment_id']; ?>" style="display:none;">
+                                        <div class="appointment-details spacing-top" id="details-<?php echo $appointment['appointment_id']; ?>" style="display:none;">
                                             <h6>Service:</h6>
                                             <p><?php echo htmlspecialchars($appointment['service_name']); ?></p>
                                             <h6>Therapist:</h6>

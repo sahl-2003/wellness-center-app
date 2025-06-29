@@ -26,7 +26,7 @@
 .therapist-sidebar-custom .mt-2 {
     margin-top: 0.5rem;
 }
-.therapist-sidebar-custom .mt-3 {
+.therapist-sidebar-custom .spacing-top {
     margin-top: 1rem;
 }
 .therapist-sidebar-custom h5 {
@@ -277,6 +277,7 @@
     gap: 24px;
     margin-bottom: 32px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 .dashboard-stats-grid > .card-therapist {
     flex: 1 1 220px;
@@ -302,6 +303,7 @@
     .dashboard-stats-grid {
         flex-direction: column;
         gap: 16px;
+        
     }
 }
 

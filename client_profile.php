@@ -2,12 +2,12 @@
 session_start();
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'client') {
-    header("Location: ../login.html");
+    header("Location: ../login.php");
     exit();
-}
+}                       
 
 // Use absolute path to ensure the file is found
-include('C:/xampp/htdocs/green2/dbconnect.php');
+include('dbconnect.php');
 
 $page_title = 'My Profile';
 $error = '';
@@ -180,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li><a class="sidebar-link" href="client_therapists.php"><i class="fas fa-user-md me-2"></i>Therapists</a></li>
                 <li><a class="sidebar-link" href="client_appointments.php"><i class="fas fa-calendar-check me-2"></i>Appointments</a></li>
                 <li class="position-relative"><a class="sidebar-link" href="client_messages.php"><i class="fas fa-envelope me-2"></i>Messages<?php if ($unread_count > 0): ?><span class="sidebar-badge"><?php echo $unread_count; ?></span><?php endif; ?></a></li>
-                <li class="mt-3"><a class="sidebar-link text-primary" href="index.php"><i class="fas fa-arrow-left me-2"></i>Go Back</a></li>
+                <li class="spacing-top"><a class="sidebar-link text-primary" href="index.php"><i class="fas fa-arrow-left me-2"></i>Go Back</a></li>
             </ul>
         </div>
         <!-- Main Content -->

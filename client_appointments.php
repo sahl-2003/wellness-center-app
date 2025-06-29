@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'client') {
 }
 
 // Database connection
-include('C:/xampp/htdocs/green2/dbconnect.php');
+include('dbconnect.php');
 
 $page_title = 'My Appointments';
 $error = '';
@@ -200,7 +200,7 @@ $conn->close();
                 <li><a class="sidebar-link" href="client_therapists.php"><i class="fas fa-user-md me-2"></i>Therapists</a></li>
                 <li><a class="sidebar-link active" href="client_appointments.php"><i class="fas fa-calendar-check me-2"></i>Appointments</a></li>
                 <li class="position-relative"><a class="sidebar-link" href="client_messages.php"><i class="fas fa-envelope me-2"></i>Messages<?php if ($unread_count > 0): ?><span class="sidebar-badge"><?php echo $unread_count; ?></span><?php endif; ?></a></li>
-                <li class="mt-3"><a class="sidebar-link text-primary" href="index.php"><i class="fas fa-arrow-left me-2"></i>Go Back</a></li>
+                <li class="spacing-top"><a class="sidebar-link text-primary" href="index.php"><i class="fas fa-arrow-left me-2"></i>Go Back</a></li>
             </ul>
         </div>
         <!-- Main Content -->
@@ -250,7 +250,7 @@ $conn->close();
                                         <?php echo ucfirst($appointment['status']); ?>
                                     </span>
                                 </div>
-                                <div class="mt-3">
+                                <div class="spacing-top">
                                     <p class="card-text mb-1"><i class="fas fa-calendar-day me-2"></i><?php echo date('F j, Y', strtotime($appointment['appointment_date'])); ?></p>
                                     <p class="card-text mb-1"><i class="fas fa-clock me-2"></i><?php echo date('g:i A', strtotime($appointment['start_time'])); ?> - <?php echo date('g:i A', strtotime($appointment['end_time'])); ?></p>
                                 </div>
@@ -258,10 +258,10 @@ $conn->close();
                                     <h6>Service Details:</h6>
                                     <p><?php echo htmlspecialchars($appointment['service_description']); ?></p>
                                     <p><strong>Amount:</strong> RS <?php echo number_format($appointment['service_price'], 2); ?></p>
-                                    <h6 class="mt-3">Therapist Information:</h6>
+                                    <h6 class="spacing-top">Therapist Information:</h6>
                                     <p><strong>Name:</strong> <?php echo htmlspecialchars($appointment['therapist_name']); ?><br><strong>Email:</strong> <?php echo htmlspecialchars($appointment['therapist_email']); ?><br><strong>Specialization:</strong> <?php echo htmlspecialchars($appointment['therapist_specialization'] ?? 'Not specified'); ?></p>
                                     <?php if (!empty($appointment['notes'])): ?>
-                                        <h6 class="mt-3">Additional Notes:</h6>
+                                        <h6 class="spacing-top">Additional Notes:</h6>
                                         <p><?php echo htmlspecialchars($appointment['notes']); ?></p>
                                     <?php endif; ?>
                                 </div>

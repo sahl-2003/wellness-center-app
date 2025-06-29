@@ -18,7 +18,7 @@
         <div class="container">
             <div class="hero-content">
 <?php if (isset($_SESSION['username'])): ?>
-    <p class="welcome-message">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</p>
+    <h1 class="welcome-message">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
 <?php endif; ?>
                 <h1>Rediscover Your Natural Balance</h1>
                 <p class="hero-subtitle">Holistic wellness therapies in the heart of Colombo</p>

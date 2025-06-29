@@ -49,3 +49,8 @@
 .text-primary:hover {
     color: #dce3d8 !important;
 }
+
+/* Add custom spacing class to replace mt-3 */
+.spacing-top {
+    margin-top: 1rem !important;
+}

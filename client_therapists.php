@@ -3,17 +3,12 @@ session_start();
 
 // Check if user is logged in and is a client
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'client') {
-    header("Location: login.html");
-    exit();
+    header("Location: login.php");
+    exit(); 
 }
 
-// Database connection
-$db_host = "localhost";
-$db_user = "root"; // Default XAMPP username
-$db_pass = "";     // Default XAMPP password
-$db_name = "greenlife"; // Your database name
+include('dbconnect.php');
 
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
 // Check connection
 if ($conn->connect_error) {
@@ -103,7 +98,7 @@ $conn->close();
                 <li><a class="sidebar-link active" href="client_therapists.php"><i class="fas fa-user-md me-2"></i>Therapists</a></li>
                 <li><a class="sidebar-link" href="client_appointments.php"><i class="fas fa-calendar-check me-2"></i>Appointments</a></li>
                 <li class="position-relative"><a class="sidebar-link" href="client_messages.php"><i class="fas fa-envelope me-2"></i>Messages<?php if ($unread_count > 0): ?><span class="sidebar-badge"><?php echo $unread_count; ?></span><?php endif; ?></a></li>
-                <li class="mt-3"><a class="sidebar-link text-primary" href="index.php"><i class="fas fa-arrow-left me-2"></i>Go Back</a></li>
+                <li class="spacing-top"><a class="sidebar-link text-primary" href="index.php"><i class="fas fa-arrow-left me-2"></i>Go Back</a></li>
             </ul>
         </div>
         <!-- Main Content -->
@@ -159,7 +154,7 @@ $conn->close();
                                 <button class="toggle-details-custom btn-custom btn-custom-secondary" data-target="details-<?php echo $therapist['therapist_id']; ?>"><i class="fas fa-eye me-1"></i> Details</button>
                                 <a href="book_appointment.php?therapist_id=<?php echo $therapist['therapist_id']; ?>" class="btn-custom btn-custom-success"><i class="fas fa-calendar-plus me-1"></i> Book Now</a>
                             </div>
-                            <div class="therapist-details mt-3" id="details-<?php echo $therapist['therapist_id']; ?>" style="display:none;">
+                            <div class="therapist-details spacing-top" id="details-<?php echo $therapist['therapist_id']; ?>" style="display:none;">
                                 <h6>Name: <?php echo htmlspecialchars($therapist['username']); ?></h6>
                                 <p><strong>Email:</strong> <?php echo htmlspecialchars($therapist['email']); ?></p>
                                 <?php if (!empty($therapist['specialties'])): ?>
